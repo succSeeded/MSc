@@ -1,0 +1,574 @@
+% !TeX encoding = UTF-8
+%%%    Стилевой файл для оформления курсовых и лабораторных работ
+%%%
+%%%    Автор А.Н. Канатников
+%%%    Версия от от 03.10.2018
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{kprj}[2018/10/03 -- report style for course and laboratory works, A.N. Kanatnikov]
+
+
+\def\ifempty#1{\def\@tempa{#1}\ifx\@tempa\@empty}
+\newif\ifpdftex
+\@ifundefined{pdfoutput}{\pdftexfalse}{\ifnum1=\pdfoutput\pdftextrue\else\pdftexfalse\fi}
+
+
+%% Параметры страницы
+
+%\textwidth=160mm
+%\textheight=240mm
+%\oddsidemargin=30mm
+%\marginparwidth=0mm
+%\marginparsep=10mm
+%\AtBeginDocument{\advance\hoffset by -1in\advance\voffset by -1in}
+\parindent=12.5mm
+\righthyphenmin=2
+
+%\ProcessOptions
+
+\RequirePackage{setspace} 
+\RequirePackage{amssymb}
+\RequirePackage{amsmath}
+\RequirePackage{amsthm}
+\RequirePackage{cite}
+\RequirePackage{tabu}
+\ifpdftex\RequirePackage{cmap}\fi
+\RequirePackage{graphicx}
+\RequirePackage{listings}
+
+\lstset{
+	inputencoding=utf8,
+	extendedchars=true,
+	literate=
+	{а}{{\cyra}}1
+	{б}{{\cyrb}}1
+	{в}{{\cyrv}}1
+	{г}{{\cyrg}}1
+	{д}{{\cyrd}}1
+	{е}{{\cyre}}1
+	{ё}{\"{\cyre}}1
+	{ж}{{\cyrzh}}1
+	{з}{{\cyrz}}1
+	{и}{{\cyri}}1
+	{й}{{\cyrishrt}}1
+	{к}{{\cyrk}}1
+	{л}{{\cyrl}}1
+	{м}{{\cyrm}}1
+	{н}{{\cyrn}}1
+	{о}{{\cyro}}1
+	{п}{{\cyrp}}1
+	{р}{{\cyrr}}1
+	{с}{{\cyrs}}1
+	{т}{{\cyrt}}1
+	{у}{{\cyru}}1
+	{ф}{{\cyrf}}1
+	{х}{{\cyrh}}1
+	{ц}{{\cyrc}}1
+	{ч}{{\cyrch}}1
+	{ш}{{\cyrsh}}1
+	{щ}{{\cyrshch}}1
+	{ъ}{{\cyrhrdsn}}1
+	{ы}{{\cyrery}}1
+	{ь}{{\cyrsftsn}}1
+	{э}{{\cyrerev}}1
+	{ю}{{\cyryu}}1
+	{я}{{\cyrya}}1
+	{А}{{\CYRA}}1
+	{Б}{{\CYRB}}1
+	{В}{{\CYRV}}1
+	{Г}{{\CYRG}}1
+	{Д}{{\CYR96}}1
+	{Е}{{\CYRE}}1
+	{Ё}{{\"{\CYRE}}}1
+	{Ж}{{\CYRZH}}1
+	{З}{{\CYRZ}}1
+	{И}{{\CYRI}}1
+	{Й}{{\CYRISHRT}}1
+	{К}{{\CYRK}}1
+	{Л}{{\CYRL}}1
+	{М}{{\CYRM}}1
+	{Н}{{\CYRN}}1
+	{О}{{\CYRO}}1
+	{П}{{\CYRP}}1
+	{Р}{{\CYRR}}1
+	{С}{{\CYRS}}1
+	{Т}{{\CYRT}}1
+	{У}{{\CYRU}}1
+	{Ф}{{\CYRF}}1
+	{Х}{{\CYRH}}1
+	{Ц}{{\CYRC}}1
+	{Ч}{{\CYRCH}}1
+	{Ш}{{\CYRSH}}1
+	{Щ}{{\CYRSHCH}}1
+	{Ъ}{{\CYRHRDSN}}1
+	{Ы}{{\CYRERY}}1
+	{Ь}{{\CYRSFTSN}}1
+	{Э}{{\CYREREV}}1
+	{Ю}{{\CYRYU}}1
+	{Я}{{\CYRYA}}1
+}
+
+\let\contsectionfont\relax
+\let\contsubsectionfont\relax
+\let\No\textnumero
+\def\sectionfont{\large\bf}
+\def\subsectionfont{\bf}
+\def\subsubsectionfont{\it}
+\def\captionfont{\fontsize{14pt}{14pt}}
+\def\captionnofont{\bfseries}
+\def\foliofont{\rm}
+\def\colonfont{\footnotesize\sl}
+\def\@underwr@font{\fontsize{8pt}{8}\selectfont}
+\DeclareMathSizes{11}{11}{8}{6}
+
+\def\l@secsepbefore{3mm}
+\def\l@subsecsepbefore{1mm}
+\def\l@subsubsecsepbefore{1mm}
+\def\secsepbefore{3.5ex plus 1ex minus .2ex}
+\def\secsepafter{3.5ex plus.2ex}
+\def\subsecsepbefore{2ex plus 1ex minus .2ex}
+\def\subsecsepafter{2ex plus 0.3ex minus 0.2ex}
+\def\subsubsecsepbefore{3ex plus 1ex minus .2ex}
+\def\subsubsecsepafter{2ex plus 0.3ex minus 0.2ex}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\theoremstyle{definition}
+\newtheorem{affirmation}{Affirmation}
+\theoremstyle{definition}
+\newtheorem{example}{Example}
+\renewenvironment{proof}{\noindent$\blacktriangleleft$}{}
+\renewcommand\qedsymbol{$\blacktriangleright$}
+
+\renewcommand{\ge}{\geqslant}
+\renewcommand{\le}{\leqslant}
+
+\addto\captionsrussian{\def\contentsname{Contents}}
+\addto\captionsrussian{\def\refname{References}}
+
+\AtEndOfPackage{\pagestyle{oneside}}
+
+\def\@grpl@len{5em}
+\def\@subspl@len{10em}
+\def\@FIOpl@len{8em}
+\def\@stampleftwidth{80mm}
+
+\input{t2acmtt.fd}
+\input{umsa.fd}
+\input{umsb.fd}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+%%%%     Секционирование
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+\def\@startctsection#1#2#3#4#5#6{\if@noskipsec \leavevmode \fi
+	\par \@tempskipa #4\relax
+	\@afterindenttrue
+	\ifdim \@tempskipa <\z@ \@tempskipa -\@tempskipa \@afterindentfalse\fi
+	\if@nobreak \everypar{}\else
+	\addpenalty{\@secpenalty}\addvspace{\@tempskipa}\fi
+	\@ifnextchar-{\secno@false\@@startctsection{#1}{#2}{#3}{#4}{#5}{#6}}%
+	{\secno@true\@@startctsection{#1}{#2}{#3}{#4}{#5}{#6}-}}
+\def\@@startctsection#1#2#3#4#5#6-{%
+	\@ifstar
+	{\@sctsect{#3}{#4}{#5}{#6}}
+	{\@threarg{\@ctsect{#1}{#2}{#3}{#4}{#5}{#6}}}}
+\long\def\@threarg#1{\@ifnextchar [{\@nthrearg{#1}}{\@xthrearg{#1}}}
+\long\def\@xthrearg#1#2{#1[{#2}][{#2}]{#2}}
+\long\def\@nthrearg#1[#2]{\@ifnextchar [{#1[#2]}{#1[#2][#2]}}
+
+\def\@ctsect#1#2#3#4#5#6[#7][#8]#9{%
+	\ifnum #2>\c@secnumdepth\secno@false\fi
+	\ifsecno@
+	\refscstepcounter{#1}\def\@svsec{\@makectsecthead{#1}\hskip#3\relax}%
+	\def\cont@svsec{\protect\numberline{\@makecontctsecthead{#1}\space}}%
+	\else
+	\let\@svsec\@empty\let\cont@svsec\@empty
+	\fi
+	\ifdefined\href
+	\Hy@GlobalStepCount\Hy@linkcounter                                         % И.К.
+	\xdef\@currentHref{section*.\the\Hy@linkcounter}%                          % И.К.
+	\Hy@raisedlink{\hyper@anchorstart{\@currentHref}\hyper@anchorend}%         % И.К.
+	\fi
+	\@tempskipa#5\relax
+	\ifdim\@tempskipa>\z@
+	\begingroup
+	#6\relax
+	\interlinepenalty\@M \ifnum #2<2 \raggedcenter@ #6\relax\@svsec\MakeUppercase{#9}\else #6\relax\@svsec#9\fi\par
+	\endgroup
+	\csname #1mark\endcsname{#8}
+	\addcontentsline{toc}{#1}{\cont@svsec\ifnum #2<2\MakeUppercase{#7}\else #7\fi}%
+	\else
+	\def\@svsechd{%
+		#6\@svsec#9\@nameuse{#1mark}{#8}%
+		\addcontentsline{toc}{#1}{\cont@svsec#7}}%
+	\fi
+	\@xsect{#5}}
+
+\def\@xsect#1{\@tempskipa #1\relax
+	\ifdim \@tempskipa>\z@
+	\par \nobreak
+	\vskip \@tempskipa
+	\@afterheading
+	\else \global\@nobreakfalse \global\@noskipsectrue
+	\everypar{\if@noskipsec \global\@noskipsecfalse
+		\clubpenalty\@M \hskip -\parindent
+		\begingroup \@svsechd. \endgroup \unskip
+		\hskip -#1\relax  % relax added 14 Jan 91
+		\else \clubpenalty \@clubpenalty
+		\everypar{}\fi}\fi\ignorespaces}
+
+\def\@sctsect#1#2#3#4#5{\@tempskipa #3\relax
+	\ifdim \@tempskipa>\z@
+	\begingroup
+	\interlinepenalty\@M \raggedcenter@ #4\hskip #1\relax \MakeUppercase{#5}\par     %%%    --- И.К. 29.09.2009
+	\endgroup
+	\else
+	\begingroup
+	\def\@svsechd{\raggedcenter@ #4\hskip #1\relax #5}            %%%    --- И.К. 29.09.2009
+	\endgroup
+	\fi
+	\@xsect{#3}}
+
+\def\@makectsecthead#1{\@nameuse{head#1}\@nameuse{the#1}\hspace{0.32em}}
+\def\@makecontctsecthead#1{\hbox to 0pt{\hss \hspace{0pt}}\@nameuse{the#1}}% черт знает почему, но hspace{0pt} вместо @nameuse{conthd#1} фиксит проблему с toc-файлом -- 3.05.2024
+\def\section@dot{}
+\newif\ifsecno@
+\def\secdelim#1{\def\@secdelimamount{#1}\gdef\@secdelim{\@secdelimamount}}
+\gdef\appendixname{ПРИЛОЖЕНИЕ}
+\gdef\conthdsection{}
+\secdelim{0.1em}
+
+
+\def\section{\newpage\@startctsection{section}{1}{\@secdelim}%
+	{\secsepbefore}{\secsepafter}{\reset@font\sectionfont}}
+\def\subsection{\@startctsection{subsection}{2}{\@secdelim}%
+	{\subsecsepbefore}{\subsecsepafter}{\reset@font\subsectionfont}}
+\def\subsubsection{\@startctsection{subsubsection}{3}{\@secdelim}%
+	{\subsubsecsepbefore}{\subsubsecsepafter}{\reset@font\subsubsectionfont}}
+\newenvironment{annotation}{\section*{Annotation}\addcontentsline{toc}{section}{\MakeUppercase{Annotation}}}{\pagebreak}
+\newenvironment{introduction}{\section*{Introduction}\addcontentsline{toc}{section}{\MakeUppercase{Introduction}}}{\pagebreak}
+\newenvironment{results}{\section*{Results}\addcontentsline{toc}{section}{\MakeUppercase{Results}}}{\pagebreak}
+
+%%%    Оформление содержания
+
+\def\tableofcontents{\section*{\contentsname
+		\@mkboth{\MakeUppercase{\contentsname}}{\MakeUppercase{\contentsname}}}%
+	\@starttoc{toc}%
+	\if@contentsbreak\clearpage\fi}
+
+\newif\if@contentsbreak\@contentsbreaktrue
+\let\InsertContentsbreak\@contentsbreaktrue
+\let\SkipContentsbreak\@contentsbreakfalse
+\def\l@section#1{\addvspace\l@secsepbefore\@dottedtocline{1}{0cm}{1.6em}{\contsectionfont#1}}
+\def\l@subsection#1{\addvspace\l@subsecsepbefore\@dottedtocline{2}{1.25cm}{2.2em}{\contsubsectionfont#1}}
+\def\l@subsubsection{\addvspace\l@subsubsecsepbefore\@dottedtocline{2}{2cm}{2.8em}}
+
+
+
+%%%        Оформление списка литературы и цитирования источников
+
+\renewcommand{\@biblabel}[1]{#1.\hfill}
+\renewenvironment{thebibliography}[1]
+{\section-{\refname}%
+	\@mkboth{\refname}{\refname}%
+	\list{\@biblabel{\@arabic\c@enumiv}}%
+	{\settowidth\labelwidth{\@biblabel{#1}}%
+		\leftmargin\labelwidth
+		\advance\leftmargin\labelsep
+		\@openbib@code
+		\usecounter{enumiv}%
+		\let\p@enumiv\@empty
+		\renewcommand\theenumiv{\@arabic\c@enumiv}}%
+	\sloppy
+	\clubpenalty4000
+	\@clubpenalty \clubpenalty
+	\widowpenalty4000%
+	\sfcode`\.\@m}
+{\def\@noitemerr
+	{\@latex@warning{Empty `thebibliography' environment}}%
+	\endlist}
+
+
+%%%   Модификация параметров списков \@listi-\@listiii
+%%%   добавлением в конец специальной команды \@userpar
+\def\@change@itemlists{%
+	\let\@tempa\@listi\edef\@listi{\@tempa\@vslisti\@userpar}%
+	\let\@listI\@listi
+	\let\@tempa\@listii\edef\@listii{\@tempa\@vslistii\@userpar}%
+	\let\@tempa\@listiii\edef\@listiii{\@tempa\@vslistiii\@userpar}%
+	\let\@tempa\@openbib@code\edef\@openbib@code{\@tempa\@userpar}%
+	\let\@change@itemlists\relax}
+\def\userpar#1{\@change@itemlists
+	\def\@userpar{#1\global\let\@userpar\relax}\ignorespaces}
+\let\@userpar\relax
+\def\@vslisti{\topsep=0.2ex plus 0.2ex minus 0.2ex
+	\partopsep=0.4ex plus 0.2ex minus 0.2ex
+	\parsep=0pt plus 0.2ex\itemsep=\parsep}
+\let\@vslistii\@vslisti
+\let\@vslistiii\@vslisti
+
+
+%%  Команда организации многострочных заголовков
+\def\raggedcenter@{\leftskip\z@ plus.4\hsize \rightskip\leftskip
+	\parfillskip\z@ \parindent\z@ \spaceskip.5em \xspaceskip.7em\relax
+	\pretolerance9999\tolerance9999 \exhyphenpenalty\@M\relax
+	\hyphenpenalty\@M \let\\\linebreak}
+\def\raggedright@{\leftskip\z@\rightskip\z@ plus.4\hsize
+	\parindent\z@ \spaceskip.5em \xspaceskip.7em\relax
+	\pretolerance9999\tolerance9999 \exhyphenpenalty\@M\relax
+	\hyphenpenalty\@M \let\\\newline}
+\def\refscstepcounter#1{\stepcounter{#1}\let\@tempa\protect
+	\def\protect{\noexpand\protect\noexpand}%
+	\edef\@currentlabel{\csname p@#1\endcsname\csname conthd#1\endcsname\csname the#1\endcsname}%
+	\let\protect\@tempa}
+
+
+%%% Колонтитулы
+
+\def\ps@oneside{%
+	\let\@mkboth\markboth
+	\def\@oddfoot{%
+		\vbox to \headheight{%
+			\hbox to \textwidth{\hfil{\foliofont\thepage}\hfil}}}%
+		\def\@evenfoot{}%
+	\@twosidefalse\@mparswitchfalse\reversemarginpar
+	\def\chapterpagestyle{plain}%
+	\def\@oddhead{}%
+	\def\@evenhead{}%
+	\let\@evenfoot\@oddfoot  %   На всякий случай
+	\def\sectionmark##1{\markboth{{\ifnum \c@secnumdepth >\z@
+				\conthdsection\thesection.\ \fi ##1}}{}}}
+
+%%%   Нумерация формул, ри сунков и проч.
+
+\def\thesection{\arabic{section}}
+\def\@section@name{section}
+\def\@whole@name{whole}
+\newcommand\@obj@numbering[2]{\def\@tempa{#2}%
+	\ifx\@tempa\@section@name
+	\@namedef{the#1}{\thesection.\arabic{#1}}%    +7 926 282 8577
+	\@addtoreset{#1}{section}%
+	\fi}
+\newcommand\equationnumbering{\@obj@numbering{equation}}
+\let\eqnumb\equationnumbering
+\newcommand\figurenumbering{\@obj@numbering{figure}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%   Титульный лист и спец листы (задание, кал. план)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\ulbox#1#2{\underline{\hbox to #1{#2\hfil}}}
+\def\ulfill{\leaders\hrule height-1pt depth1.4pt\hfill\kern\z@}
+\def\ulfillnoLeaders{\hrule height-1pt depth1.4pt\hfill\kern\z@}
+\def\UlBox#1#2{\hbox to 0pt{#2\hss}\nobreak\vrule height-1pt depth1.4pt width#1{}}
+\def\ulline{\vspace{12pt}\hrulefill}
+\newdimen\jsp\jsp=0.9mm
+
+\def\@labrab@title{\MakeUppercase{{\bf Report}}\\ по лабораторной работе
+	\ifnum\@title@no<1\else\space\No\@title@no\fi}
+\def\@rpzname{\MakeUppercase{Homework report}}
+\def\@homework@title{{\bfseries \@rpzname}}
+\def\@VKR@title{{\bfseries \@rpzname}\textit{\\к выпускной квалификационной работе\\на тему:}}
+\newif\if@jobspec\@jobspecfalse
+\newif\if@FirstConsultant\@FirstConsultantfalse
+\newif\if@homeworkHSE\@homeworkHSEfalse
+\def\@chief@type{Руководитель \@jobsp@type@rod}
+\def\@make@zadanie{\gen@zadanie}
+
+\def\LabWork{\let\@title@name\@labrab@title\def\@titlename@font{\bf\itshape}
+	\def\@chief@type{Professor}}
+\def\homeworkHSE{\let\@title@name\@homework@title\def\@titlename@font{}
+	\def\@jobsp@type@shrt{HW}\let\@zadan@theme\@zadan@VKR@theme
+	\@FirstConsultanttrue\@homeworkHSEtrue
+	\def\@chief@type{Professor}%
+	\@block@variant}
+\def\LabWorkNo#1{\def\@title@no{#1}}
+\def\title#1{\def\@title{#1}}
+
+\newcommand\workyear[1]{\def\@workyear{#1}}
+\newcommand\discipline[1]{\def\@discipline{#1}}
+\newcommand\chair[1]{\def\@chair{#1}}
+\newcommand\faculty[1]{\def\@faculty{#1}}
+\newcommand\chief[1]{\def\@chief{#1}}
+\newcommand\FirstConsultant[1]{\def\@FirstConsultant{#1}}
+\newcommand\FirstAuthor[1]{\def\@FirstAuthor{#1}}
+\newcommand\SecondAuthor[1]{\def\@SecondAuthor{#1}}
+\def\variant#1{\def\@variant{#1}}
+\def\@block@variant{\def\variant##1{}\let\@variant\relax}
+\def\Ministry#1{\def\@Ministry{#1}}
+\def\BMSTU#1{\def\@BMSTU{#1}}
+\renewcommand\thesubfigure{}
+\let\oldref=\ref 
+\renewcommand{\ref}[1]{(\oldref{#1})}
+\newcommand{\figref}[1]{fig.~\oldref{#1}}
+\newcommand{\thref}[1]{\oldref{#1}}
+
+
+%%  Настроечные команды
+
+\title{}
+\LabWorkNo{0}
+\chair{}
+\faculty{}
+\Ministry{Ministry~of~Science~and~Higher~Education\\of~the~Russian~Federation}
+\BMSTU{National~Research~University\\Higher~School~of~Economics}
+
+
+
+\def\maketitle{%
+	\begin{spacing}{1.0} % -- единичный межстрочный интвервал чтобы не слетало форматирование
+		\thispagestyle{empty}
+		\bgroup
+		\centering
+		\@title@shapka{emblema}%
+		\ifx\@faculty\@empty\else\vskip4mm{\fontsize{14pt}{18pt}\selectfont\rm \textit{\@faculty}\par}\fi
+		\ifx\@chair\@empty\else\vskip4mm{\fontsize{14pt}{18pt}\selectfont \textit{\@chair}\par}\fi
+		\vskip10em
+		\bgroup
+		{\fontsize{16pt}{24pt}\selectfont
+		\bgroup\@titlename@font\@title@name\par\egroup}
+		\ifx\@title\@empty\else\vskip4mm{\fontsize{16pt}{24}\selectfont \textbf{\textit{\MakeUppercase{\@title}}}\par}\fi
+		\@ifundefined{@discipline}{}{\vskip4mm{\rm Subject: \textit{\@discipline}\par}}
+		\@ifundefined{@variant}{}{\vskip4mm{\bfseries Variant \No\@variant\par}}
+		\egroup
+		\vskip20mm
+		{\fontsize{12pt}{12pt}\selectfont
+		\bgroup
+		\vfil
+		\raggedright@
+		\if@homeworkHSE
+			\@subscr@noline{Student}{\@FirstAuthor}%
+			\vskip5mm
+			\@subscr@noline{Student}{\@SecondAuthor}%
+		\else
+			\@subscr@line{Student}{}{\@author}%
+		\fi
+		\@ifundefined{@chief}{}{\vskip5mm\@subscr@noline{\@chief@type}{\@chief}}%
+		\vskip20mm
+		\egroup
+		\vskip20mm
+		\textit{Moscow, \@workyear}\par
+		\pagebreak
+		\egroup}
+	\end{spacing}
+}
+\let\cover\maketitle
+
+\def\@title@shapka#1{%
+	\bgroup
+	\ifpdftex\def\emb@file{#1.pdf}\else\def\emb@file{#1.eps}\fi
+	\hrule height0pt\vskip-\headheight\vskip-\headsep
+	\ifempty{#1}\else
+	\advance\leftskip by 40mm\noindent
+	\dfb{\kern-3mm\hbox{\includegraphics[scale=1.1]{\emb@file}}}%
+	\fi
+	{\fontsize{14}{14pt}\selectfont\bfseries\@Ministry\par}%
+	\vskip2mm
+	{\fontsize{14}{14pt}\selectfont\bfseries\@BMSTU\par}%
+	\egroup
+	\vskip2mm\hrule height.7mm\vskip2pt\hrule}
+
+\def\@subscr@line#1#2#3{%
+	\noindent\hbox to \@stampleftwidth{#1\space#2\hfil}%
+	\ulbox\@subspl@len{}\space
+	\hbox to\@FIOpl@len{\itshape#3\hfil}\par\nobreak
+	\hrule height0pt\nobreak\vskip1mm\noindent\hbox to \@stampleftwidth{%
+		\ifempty{#1}\hphantom{#1}\space
+		\hbox to\@grpl@len{\@underwr@font\hfil(group)\hfil}\fi}%
+	\hbox to\@subspl@len{\@underwr@font\hfil(signature, date)\hfil}\par}
+	
+\def\@subscr@noline#1#2{%
+	\noindent\hbox to \@stampleftwidth{#1\hfil}%
+	\hspace{\@subspl@len{}}\space
+	\hbox to\@FIOpl@len{\itshape#2\hfil}\par\nobreak\par}
+	
+\def\@subscr@line@forpract#1#2{%
+		\noindent #1 \hbox to 0pt{\ \hspace{0.3\linewidth}#2\hss}\ulfill\par}
+
+\def\@group@place{\underline{\hbox to\@grpl@len{\@ifundefined{@group}{}{\ \@group}\hfil}}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+%%%    Разные команды
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+\newcommand\initcounter[1]{\stepcounter{#1}\addtocounter{#1}{-1}}
+\let\al\guillemotleft\let\lk\al
+\let\ar\guillemotright\let\rk\ar
+\newcommand\brop[1]{#1\discretionary{}{\hbox{$#1$}}{}}
+\let\ges\geqslant
+\let\les\leqslant
+\let\emptyset\varnothing
+\renewcommand{\@makefntext}[1]{\parindent=1em\noindent \hbox to 1.8em{\hss\@makefnmark} \, #1}
+%%Полужирный наклонный шрифт в формулах
+
+\def\nb-{\nobreak\hskip0pt\hbox{-}\nobreak\hskip0pt}  %  неразрывный дефис
+\def\nf-{\nobreak\hskip0pt\discretionary{-}{}{-}\nobreak\hskip0pt}   % дефис с сохранением точек переноса
+\def\msps#1{\thinmuskip=#1\thinmuskip\medmuskip=#1\medmuskip\thickmuskip=#1\thickmuskip}
+\def\mspsh#1#2#3{%
+	\thickmuskip=#1\thickmuskip plus #2\thickmuskip minus #3\thickmuskip
+	\medmuskip=#1\medmuskip plus #2\medmuskip minus #3\medmuskip
+	\thinmuskip=#1\thinmuskip plus #2\thinmuskip minus #3\thinmuskip}
+\def\@change@itemlists{%
+	\let\@tempa\@listi\edef\@listi{\@tempa\@userpar}%
+	\let\@listI\@listi
+	\let\@tempa\@listii\edef\@listii{\@tempa\@userpar}%
+	\let\@tempa\@listiii\edef\@listiii{\@tempa\@userpar}%
+	\let\@tempa\@openbib@code\edef\@openbib@code{\@tempa\@userpar}%
+	\let\@change@itemlists\relax}
+\def\userpar#1{\@change@itemlists
+	\def\@userpar{#1\global\let\@userpar\relax}\ignorespaces}
+\let\@userpar\relax
+
+\def\bi{\ifmmode\let\@next\boldsymbol
+	\else\def\@next{\bfseries\itshape\mathversion{bold}}\fi\@next}
+\newcommand\be[1]{\mbox{\mathversion{bold}${#1}$}}
+\def\luft{\nobreak\hskip0pt}
+\newcommand\usup[2]{\vrule height#1ex depth#2ex width0em}
+\newcommand\usupw[2]{\vrule height#1ex depth#2ex width0.3pt}
+\def\vj#1{\vadjust{\vskip#1pt}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%  Дополнительный список (отрабатывается перед командой \begin{document})
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\def\BlackColorLinks{\def\@hyper@colorlinks{false}}
+\def\@hyper@colorlinks{true}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%   Работа с рисунками
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\long\def\@makecaption#1#2{%
+	\begin{spacing}{1.5}
+	\def\@tempa{#2}\def\@tempb{\ignorespaces}%
+	\ifx\@tempa\@tempb
+	\def\@tempb{{\captionnofont{#1}}}%
+	\else
+	\def\@tempb{{\captionnofont{#1.}\space}}%
+	\fi
+	\sbox\@tempboxa{\captionfont\@tempb#2}%
+	\ifdim \wd\@tempboxa >\hsize
+	{\captionfont\@tempb#2\par}%
+	\else
+	\global \@minipagefalse
+	\hb@xt@\hsize{\hfil\box\@tempboxa\hfil}%
+	\fi\end{spacing}}
+%  Для вставки рисунка, не занимающего места
+\def\dfb#1{\ifvmode \let\@tempa=\relax \else \let\@tempa=\vadjust\fi
+	\@tempa{\vbox to 0pt{#1\vss}}}
+
+
+
+\endinput

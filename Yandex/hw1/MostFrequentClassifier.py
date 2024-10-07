@@ -23,4 +23,4 @@ class MostFrequentClassifier(ClassifierMixin):
         X : array like, shape = (n_samples, n_features)
         Data to predict
         """
-        return self.mostFrequent * np.ones((X.shape[0], 1))
+        return self.mostFrequent * np.ones((X.shape[0],))

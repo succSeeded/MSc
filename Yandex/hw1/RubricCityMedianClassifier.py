@@ -1,3 +1,4 @@
+import numpy as np
 from sklearn.base import ClassifierMixin
 
 class RubricCityMedianClassifier(ClassifierMixin):
@@ -5,4 +6,9 @@ class RubricCityMedianClassifier(ClassifierMixin):
         self.medians = X.groupby(["city", "modified_rubrics"])["average_bill"].median()
 
     def predict(self, X=None):
-        return X.merge(self.medians, how="left", on=["city", "modified_rubrics"])
+        return X.drop(columns=["average_bill"]).merge(
+            self.medians,
+            how="left",
+            left_on=["city", "modified_rubrics"],
+            right_index=True,
+        )["average_bill"]
