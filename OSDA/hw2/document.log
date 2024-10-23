@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.18.1 (MiKTeX 24.4) (format=lualatex 2024.10.21)  23 OCT 2024 03:21
+This is LuaHBTeX, Version 1.18.1 (MiKTeX 24.4) (format=lualatex 2024.10.21)  23 OCT 2024 14:32
  restricted system commands enabled.
 **document.tex
 (./document.tex
@@ -1009,7 +1009,7 @@ L3 programming layer <2024-09-10>
 
 Here is how much of LuaTeX's memory you used:
  21496 strings out of 475910
- 156268,1977958 words of node,token memory allocated
+ 156268,1648299 words of node,token memory allocated
  562 words of node memory still in use:
    7 hlist, 2 vlist, 2 rule, 2 glue, 4 kern, 1 glyph, 19 attribute, 58 glue_spec
 , 11 attribute_list, 2 write nodes
@@ -1025,7 +1025,7 @@ ts/type1/public/amsfonts/cm/cmmi12.pfb><E:/Apps/MiKTeX/fonts/type1/public/amsfon
 ts/cm/cmr10.pfb><E:/Apps/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><E:/App
 s/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><E:/Apps/MiKTeX/fonts/type1/p
 ublic/amsfonts/symbols/msbm10.pfb>
-Output written on document.pdf (10 pages, 173543 bytes).
+Output written on document.pdf (10 pages, 173713 bytes).
 
 PDF statistics: 96 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)
