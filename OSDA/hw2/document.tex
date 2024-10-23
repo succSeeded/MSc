@@ -433,8 +433,14 @@
 	
 	\noindent\textbf{Task.}  Show that distributivity implies absorption.
 	
-	\noindent\textbf{Solution.} 
-	
+	\noindent\textbf{Solution.} Suppose that operators $\lor$ and $\land$, defined on a bounded lattice, are distributive. Since the lattice is bounded, $\lor$ and $\land$ have identity elements $1_{\lor}$ and $1_{\land}$ respectively. Then, for any $x,\, y$ we have
+	\[x\land(x\lor y)= (x\land x)\lor(x\land y) = x\lor(x\land y).\]
+	Also from distributivity follows that
+	\[x\lor(x\land y) = (x\land 1_{\land})\lor(x\land y) = x\land (1_{\land}\lor b).\]
+	Since identity element of $\land$ is a zero for $\lor$ and vice versa, we get
+	\[x\land (1_{\land}\lor b) = x\land1_{\land}=x,\]
+	hence
+	\[x = x\land(x\lor y) = x\lor(x\land y)\text{ QED}.\]
 	\newpage
 	\subsection*{Question 5}
 	
