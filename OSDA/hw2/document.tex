@@ -210,42 +210,42 @@
 			\hline
 			$A$ & $A^\prime$ & $A^{\prime\prime}\setminus A$ & $A$ & $A^\prime$ & $A^{\prime\prime}\setminus A$\\
 			\hline
-			$\{a\}$ & $G$ & $\emptyset$ & $\{a,\, b,\, d\}$ & $\{4\}$ & $\emptyset$\\
+			$\{a\}$ & $G$ & $\emptyset_{M}$ & $\{a,\, b,\, d\}$ & $\{4\}$ & $\emptyset_{M}$\\
 			\hline
-			$\{b\}$ & $\{4,\, 5\}$ & $\{a\}$ & $\{a,\, b,\, e\}$ & $\{5\}$ & $\emptyset$\\
+			$\{b\}$ & $\{4,\, 5\}$ & $\{a\}$ & $\{a,\, b,\, e\}$ & $\{5\}$ & $\emptyset_{M}$\\
 			\hline
-			$\{c\}$ & $\{1,\, 2\}$ & $\{a\}$ & $\{a,\, c,\, d\}$ & $\{2\}$ & $\emptyset$\\
+			$\{c\}$ & $\{1,\, 2\}$ & $\{a\}$ & $\{a,\, c,\, d\}$ & $\{2\}$ & $\emptyset_{M}$\\
 			\hline
-			$\{d\}$ & $\{2,\, 3,\, 4\}$ & $\{a\}$ & $\{a,\, c,\, e\}$ & $\{1\}$ & $\emptyset$\\
+			$\{d\}$ & $\{2,\, 3,\, 4\}$ & $\{a\}$ & $\{a,\, c,\, e\}$ & $\{1\}$ & $\emptyset_{M}$\\
 			\hline
-			$\{e\}$ & $\{1,\, 3,\, 5\}$ & $\{a\}$ & $\{a,\, d,\, e\}$ & $\{3\}$ & $\emptyset$\\
+			$\{e\}$ & $\{1,\, 3,\, 5\}$ & $\{a\}$ & $\{a,\, d,\, e\}$ & $\{3\}$ & $\emptyset_{M}$\\
 			\hline
-			$\{a,\, b\}$ & $\{4,\, 5\}$ & $\emptyset$ & $\{b,\, c,\, d\}$ & $\emptyset$ & Trivial\\
+			$\{a,\, b\}$ & $\{4,\, 5\}$ & $\emptyset_{M}$ & $\{b,\, c,\, d\}$ & $\emptyset_{G}$ & $\{a,\, e\}$\\
 			\hline
-			$\{a,\, c\}$ & $\{1,\, 2\}$ & $\emptyset$ & $\{b,\, c,\, e\}$ & $\emptyset$ & Trivial\\
+			$\{a,\, c\}$ & $\{1,\, 2\}$ & $\emptyset_{M}$ & $\{b,\, c,\, e\}$ & $\emptyset_{G}$ & $\{a,\, d\}$\\
 			\hline
-			$\{a,\, d\}$ & $\{2,\, 3,\, 4\}$ & $\emptyset$ & $\{b,\, d,\, e\}$ & $\emptyset$ & Trivial\\
+			$\{a,\, d\}$ & $\{2,\, 3,\, 4\}$ & $\emptyset_{M}$ & $\{b,\, d,\, e\}$ & $\emptyset_{G}$ & $\{a,\, c\}$\\
 			\hline
-			$\{a,\, e\}$ & $\{1,\, 3,\, 5\}$ & $\emptyset$ & $\{c,\, d,\, e\}$ & $\emptyset$ & Trivial\\
+			$\{a,\, e\}$ & $\{1,\, 3,\, 5\}$ & $\emptyset_{M}$ & $\{c,\, d,\, e\}$ & $\emptyset_{G}$ & $\{a,\, b\}$\\
 			\hline
-			$\{b,\, c\}$ & $\emptyset$ & Trivial & $\{a,\, b,\, c,\, d\}$ & $\emptyset$ & Trivial\\
+			$\{b,\, c\}$ & $\emptyset_{G}$ & $\{a,\, d,\, e\}$ & $\{a,\, b,\, c,\, d\}$ & $\emptyset_{G}$ & $\{e\}$\\
 			\hline
-			$\{b,\, d\}$ & $\{4\}$ & $\{a\}$ & $\{a,\, b,\, c,\, e\}$ & $\emptyset$ & Trivial\\
+			$\{b,\, d\}$ & $\{4\}$ & $\{a\}$ & $\{a,\, b,\, c,\, e\}$ & $\emptyset_{G}$ & $\{d\}$\\
 			\hline
-			$\{b,\, e\}$ & $\{5\}$ & $\{a\}$ & $\{a,\, b,\, d,\, e\}$ & $\emptyset$ & Trivial\\
+			$\{b,\, e\}$ & $\{5\}$ & $\{a\}$ & $\{a,\, b,\, d,\, e\}$ & $\emptyset_{G}$ & $\{c\}$\\
 			\hline
-			$\{c,\, d\}$ & $\{2\}$ & $\{a\}$ & $\{a,\, c,\, d,\, e\}$ & $\emptyset$ & Trivial\\
+			$\{c,\, d\}$ & $\{2\}$ & $\{a\}$ & $\{a,\, c,\, d,\, e\}$ & $\emptyset_{G}$ & $\{b\}$\\
 			\hline
-			$\{c,\, e\}$ & $\{1\}$ & $\{a\}$ & $\{b,\, c,\, d,\, e\}$ & $\emptyset$ & Trivial\\
+			$\{c,\, e\}$ & $\{1\}$ & $\{a\}$ & $\{b,\, c,\, d,\, e\}$ & $\emptyset_{G}$ & $\{a\}$\\
 			\hline
 			$\{d,\, e\}$ & $\{3\}$ & $\{a\}$ & $\emptyset_M$ & G & Trivial\\
 			\hline
-			$\{a,\, b,\, c\}$ & $\emptyset$ & Trivial & & & \\
+			$\{a,\, b,\, c\}$ & $\emptyset_{G}$ & $\{d,\, e\}$ & & & \\
 			\hline
 		\end{tblr}
 	\end{center}
 	
-	According tho the table there a following non-trivial implications: $\{b\}\rightarrow \{a\}$, $\{c\}\rightarrow \{a\}$, $\{d\}\rightarrow \{a\}$, $\{e\}\rightarrow \{a\}$, $\{b,\, d\}\rightarrow \{a\}$, $\{b,\, e\}\rightarrow \{a\}$, $\{c,\, e\}\rightarrow \{a\}$, $\{c,\, d\}\rightarrow \{a\}$, $\{d,\, e\}\rightarrow \{a\}$.
+	\noindent According to the table there are following non-trivial implications: $\{b\}\rightarrow \{a\}$, $\{c\}\rightarrow \{a\}$, $\{d\}\rightarrow \{a\}$, $\{e\}\rightarrow \{a\}$, $\{b,\, c\}\rightarrow\{a,\, d,\, e\}$, $\{a,\, b,\, c\}\rightarrow\{d,\, e\}$, $\{b,\, d\}\rightarrow \{a\}$, $\{b,\, e\}\rightarrow \{a\}$, $\{c,\, e\}\rightarrow \{a\}$, $\{c,\, d\}\rightarrow \{a\}$, $\{d,\, e\}\rightarrow \{a\}$, $\{b,\, c,\, d\}\rightarrow\{a,\, e\}$, $\{b,\, c,\, e\}\rightarrow\{a,\, d\}$, $\{b,\, d,\, e\}\rightarrow\{a,\, c\}$, $\{c,\, d,\, e\}\rightarrow\{a,\, b\}$, $\{a,\, b,\, c,\, d\}\rightarrow\{e\}$, $\{a,\, b,\, c,\, e\}\rightarrow\{d\}$, $\{a,\, b,\, d,\, e\}\rightarrow\{c\}$, $\{a,\, c,\, d,\, e\}\rightarrow\{b\}$, $\{b,\, c,\, d,\, e\}\rightarrow\{a\}$.
 	\newpage
 	 
 	\subsection*{Question 2}
