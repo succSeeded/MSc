@@ -441,6 +441,13 @@
 	\[x\land (1_{\land}\lor b) = x\land1_{\land}=x,\]
 	hence
 	\[x = x\land(x\lor y) = x\lor(x\land y)\text{ QED}.\]
+	
+	\noindent\textit{Alternative solution.} Consider operators $\land$ and $\lor$ on a lattice which are also distributive. From distributivity comes that
+	\[x\land(x\lor y) = (x\land x)\lor(x\land y) = x\lor(x\land y),\]
+	since $x\land x=x$ by definition of infimum. Furthermore, since $x \leq x\lor y$, $x\land y \leq x$, $x\land y = x$ iff $x\leq y$ and $x \lor y = x$ iff $y \leq x$, we get that
+	\[x\lor(x\land y)=x,\, x\land(x\lor y)=x,\]
+	hence,
+	\[x=x\lor(x\land y)=x\land(x\lor y)\]
 	\newpage
 	\subsection*{Question 5}
 	
