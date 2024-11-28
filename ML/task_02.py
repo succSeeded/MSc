@@ -57,6 +57,13 @@ class KNN:
         #  This is fine as is, but real-world implementations use more efficient data structures.
         #  If you implement something innovative, you may earn a bonus point. Note, that the 
         #  external libraries are prohibited.
+        
+        self.X_train = X
+        
+        self.y_train = y
+
+        self.class_labels = np.unique(y)
+        
         pass
 
     def predict(self, X: np.ndarray) -> np.ndarray:
@@ -70,6 +77,22 @@ class KNN:
         # Exercise: Consider the asymptotic complexity of this function. How does it depend on the feature space dimension?
 
         # Fully vectorized solution: 4 points. Other working solutions: 3 points.
+
+        test_reshaped = np.repeat(X, self.X_train.shape[0]).reshape([X.shape[0], X.shape[1], self.X_train.shape[0]])
+        train_reshaped = np.repeat(self.X_train, X.shape[0]).reshape([self.X_train.shape[0], X.shape[1], X.shape[0]]).T
+        
+        D = np.linalg.norm((test_reshaped - train_reshaped), axis=1)
+        
+        classes = np.repeat(y_train, X.shape[0]).reshape([self.X_train.shape[0],X.shape[0]]).T
+
+        sort_ids = np.argsort(D, axis=1)
+        d_sorted = np.dstack([np.take_along_axis(D, sort_ids, axis=1), np.take_along_axis(classes, sort_ids, axis=1)])
+
+        class_counts = np.zeros([X.shape[0], self.class_labels.shape[0]])
+        
+        for i in range(self.class_labels):
+            class_counts = np.count_nonzero(d_sorted[:,:,1] == class_i, axis=1)
+        
         pass
         
 
