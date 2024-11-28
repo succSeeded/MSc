@@ -28,9 +28,10 @@ Recommendation:
     Start by examining the code from the `if __name__ == "__main__"` section, then proceed to the accuracy function and the KNN class.
 """
 
-import numpy as np
 from typing import SupportsIndex
-from sklearn.metrics import classification_report, accuracy_score
+import numpy as np
+from sklearn.metrics import classification_report, accuracy_score, f1_score
+
 
 class KNN:
     """
@@ -49,81 +50,125 @@ class KNN:
 
     def fit(self, X: np.ndarray, y: SupportsIndex):
         """
-        Fits the KNN model to the training data. 
-        In KNN, "fitting" simply involves storing the training dataset.        
+        Fits the KNN model to the training data.
+        In KNN, "fitting" simply involves storing the training dataset.
         """
-        # For the first try, just store the training set in the object's attributes.
-        ...
-        #  This is fine as is, but real-world implementations use more efficient data structures.
-        #  If you implement something innovative, you may earn a bonus point. Note, that the 
-        #  external libraries are prohibited.
-        
+
         self.X_train = X
-        
+
         self.y_train = y
 
         self.class_labels = np.unique(y)
-        
-        pass
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
-            Predicts labels for a set of input samples.
+        Predicts labels for a set of input samples.
         """
-        # TODO: 1) Compute the Euclidean distance between each sample in X and each sample in self.X_train. 
-        ...
-        # TODO: 2) For each sample in X, find the self.n_neighbors closest samples in self.X_train and aggregate their labels.
-        ...
-        # Exercise: Consider the asymptotic complexity of this function. How does it depend on the feature space dimension?
 
-        # Fully vectorized solution: 4 points. Other working solutions: 3 points.
+        test_reshaped = np.repeat(X, self.X_train.shape[0]).reshape(
+            [X.shape[0], X.shape[1], self.X_train.shape[0]]
+        )
+        train_reshaped = (
+            np.repeat(self.X_train, X.shape[0])
+            .reshape([self.X_train.shape[0], X.shape[1], X.shape[0]])
+            .T
+        )
 
-        test_reshaped = np.repeat(X, self.X_train.shape[0]).reshape([X.shape[0], X.shape[1], self.X_train.shape[0]])
-        train_reshaped = np.repeat(self.X_train, X.shape[0]).reshape([self.X_train.shape[0], X.shape[1], X.shape[0]]).T
-        
         D = np.linalg.norm((test_reshaped - train_reshaped), axis=1)
 
+        train_classes = (
+            self.y_train.repeat(X.shape[0])
+            .reshape([self.y_train.shape[0], X.shape[0]])
+            .T
+        )
         sort_ids = np.argsort(D, axis=1)
-        d_sorted = np.dstack([np.take_along_axis(D, sort_ids, axis=1), np.take_along_axis(self.y_train, sort_ids, axis=0)])
+        d_sorted = np.dstack(
+            [
+                np.take_along_axis(D, sort_ids, axis=1),
+                np.take_along_axis(train_classes, sort_ids, axis=1),
+            ]
+        )
 
-        classes_stacked = self.class_labels.repeat(d_sorted.shape[0]*d_sorted.shape[1], axis=0).T
+        classes_stacked = self.class_labels.repeat(
+            X.shape[0] * self.n_neighbors, axis=0
+        ).reshape(self.class_labels.shape[0], X.shape[0] * self.n_neighbors)
+        print(classes_stacked[:, :4])
 
-        class_counts = np.count_nonzero((np.ndarray.flatten(d_sorted[:,:self.n_neighbors,1]) == classes_stacked).reshape(d_sorted.shape[0], self.n_neighbors, self.class_labels.shape[0]), axis=2)
+        class_counts = np.count_nonzero(
+            (
+                np.ndarray.flatten(d_sorted[:, : self.n_neighbors, 1])
+                == classes_stacked
+            ).reshape(
+                self.class_labels.shape[0],
+                X.shape[0],
+                self.n_neighbors,
+            ),
+            axis=2,
+        )
 
-        y_preds = np.take_along_axis(classes_stacked[:,:self.n_neighbors,0], np.argmax(class_counts, axis=0, keepdims=True), axis=0).flatten()
-        
-        pass
-        
+        # print(class_counts.shape)
+        # print(classes_stacked[:, : X.shape[0]].shape)
+        # print(np.argmax(class_counts, axis=0, keepdims=True).shape)
+        # print(
+        #     np.take_along_axis(
+        #         classes_stacked[:, : X.shape[0]],
+        #         np.argmax(class_counts, axis=0, keepdims=True),
+        #         axis=0,
+        #     )
+        #     .flatten()
+        #     .shape
+        # )
+        return np.take_along_axis(
+            classes_stacked[:, : X.shape[0]],
+            np.argmax(class_counts, axis=0, keepdims=True),
+            axis=0,
+        ).flatten()
+
 
 def accuracy(labels_true: np.ndarray, labels_pred: np.ndarray) -> float:
     """
-    Computes the fraction of correctly predicted labels. 
+    Computes the fraction of correctly predicted labels.
     This is a simple yet imperfect measure of classification performance.
     """
     return np.count_nonzero(labels_pred == labels_true) / labels_true.shape[0]
 
+
 def metric(labels_true: np.ndarray, labels_pred: np.ndarray) -> float:
     """
-    Implements an additional classification metric. 
+    Implements an additional classification metric.
     You can choose one we’ve discussed in class or come up with your own.
     """
     if labels_true.shape != labels_pred.shape:
-        raise ValueError(f"Non-matching input arguments' shapes: got {labels_true.shape}, {labels_pred.shape}")
-    
+        raise ValueError(
+            f"Non-matching input arguments' shapes: got {labels_true.shape}, {labels_pred.shape}"
+        )
+
     label_classes = np.unique(labels_true)
     labels_count = labels_true.shape[0]
 
-    TP = 0
-    FP = 0
-    FN = 0
-    
+    score = 0
+
     for label_class in label_classes:
+        tp = (
+            np.count_nonzero(
+                np.logical_and(labels_pred == label_class, labels_true == label_class)
+            )
+        )
+        fp = (
+            np.count_nonzero(
+                np.logical_and(labels_pred == label_class, labels_true != label_class)
+            )
+        )
+        fn = (
+            np.count_nonzero(
+                np.logical_and(labels_pred != label_class, labels_true == label_class)
+            )
+        )
         
-            TP += np.count_nonzero(label_pred == label_class and label_true == label_class) / labels_count
-            FP += np.count_nonzero(label_pred == label_class and label_true != label_class) / labels_count
-            FN += np.count_nonzero(label_pred != label_class and label_true == label_class) / labels_count
-        
-    return 2 * TP / (2*TP + NP + FN)
+        score += 2 * tp / (2 * tp + fp + fn)
+
+    return score / label_classes.shape[0]
+
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
@@ -168,30 +213,33 @@ if __name__ == "__main__":
 
     # check that your accuracy is honest :^)
     print("Accuracy: %.4f [ours]" % accuracy(y_test, y_pred))
-    assert abs(accuracy_score(y_test, y_pred) - accuracy(y_test, y_pred)) < 1e-5,\
-        "Implemented accuracy is not the same as sci-kit learn one!"
-    
+    assert (
+        abs(accuracy_score(y_test, y_pred) - accuracy(y_test, y_pred)) < 1e-5
+    ), "Implemented accuracy is not the same as sci-kit learn one!"
+
     # Check classifier performance
-    assert accuracy_score(y_test, y_pred) > 190. / 290,\
-        "Your classifier is worse than the constant !"
+    assert (
+        accuracy_score(y_test, y_pred) > 190.0 / 290
+    ), "Your classifier is worse than the constant !"
 
     # Calculate additional metric and compare with library version
     print("Additional metric: %.4f [custom]" % metric(y_test, y_pred))
-    assert abs(metric(y_test, y_pred) - ...) < 1e-5, \
-        "Custom metric does not match sklearn metric!"
+    assert (
+        abs(metric(y_test, y_pred) - f1_score(y_test, y_pred,average="macro")) < 1e-5
+    ), "Custom metric does not match sklearn metric!"
 
     # Convenient sklearn tool to calculate standard metrics
     print(classification_report(y_test, y_pred))
 
     # Matplotlib Exercise:
-    # Generate three plots for the test set: 
+    # Generate three plots for the test set:
     # - Ground truth labels
     # - Predictions with n_neighbors = 1
     # - Predictions with the best n_neighbors in the range 1...5
-    
-    # Each plot should include the training data points with appropriate colors, 
+
+    # Each plot should include the training data points with appropriate colors,
     # (hint: using transparency or small markers to avoid covering test points).
-    
+
     # Save plots !!to current folder!! using matplotlib's `savefig`.
 
     # Fourth plot: Plot metrics as functions of n_neighbors.
