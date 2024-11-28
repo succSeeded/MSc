@@ -82,16 +82,15 @@ class KNN:
         train_reshaped = np.repeat(self.X_train, X.shape[0]).reshape([self.X_train.shape[0], X.shape[1], X.shape[0]]).T
         
         D = np.linalg.norm((test_reshaped - train_reshaped), axis=1)
-        
-        classes = np.repeat(y_train, X.shape[0]).reshape([self.X_train.shape[0],X.shape[0]]).T
 
         sort_ids = np.argsort(D, axis=1)
-        d_sorted = np.dstack([np.take_along_axis(D, sort_ids, axis=1), np.take_along_axis(classes, sort_ids, axis=1)])
+        d_sorted = np.dstack([np.take_along_axis(D, sort_ids, axis=1), np.take_along_axis(self.y_train, sort_ids, axis=0)])
 
-        class_counts = np.zeros([X.shape[0], self.class_labels.shape[0]])
-        
-        for i in range(self.class_labels):
-            class_counts = np.count_nonzero(d_sorted[:,:,1] == class_i, axis=1)
+        classes_stacked = self.class_labels.repeat(d_sorted.shape[0]*d_sorted.shape[1], axis=0).T
+
+        class_counts = np.count_nonzero((np.ndarray.flatten(d_sorted[:,:self.n_neighbors,1]) == classes_stacked).reshape(d_sorted.shape[0], self.n_neighbors, self.class_labels.shape[0]), axis=2)
+
+        y_preds = np.take_along_axis(classes_stacked[:,:self.n_neighbors,0], np.argmax(class_counts, axis=0, keepdims=True), axis=0).flatten()
         
         pass
         
@@ -101,14 +100,30 @@ def accuracy(labels_true: np.ndarray, labels_pred: np.ndarray) -> float:
     Computes the fraction of correctly predicted labels. 
     This is a simple yet imperfect measure of classification performance.
     """
-    return 0.0
+    return np.count_nonzero(labels_pred == labels_true) / labels_true.shape[0]
 
 def metric(labels_true: np.ndarray, labels_pred: np.ndarray) -> float:
     """
     Implements an additional classification metric. 
     You can choose one we’ve discussed in class or come up with your own.
     """
-    return 0.0
+    if labels_true.shape != labels_pred.shape:
+        raise ValueError(f"Non-matching input arguments' shapes: got {labels_true.shape}, {labels_pred.shape}")
+    
+    label_classes = np.unique(labels_true)
+    labels_count = labels_true.shape[0]
+
+    TP = 0
+    FP = 0
+    FN = 0
+    
+    for label_class in label_classes:
+        
+            TP += np.count_nonzero(label_pred == label_class and label_true == label_class) / labels_count
+            FP += np.count_nonzero(label_pred == label_class and label_true != label_class) / labels_count
+            FN += np.count_nonzero(label_pred != label_class and label_true == label_class) / labels_count
+        
+    return 2 * TP / (2*TP + NP + FN)
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
@@ -141,7 +156,7 @@ if __name__ == "__main__":
     train_size = int(total_size * 0.7)
     indices = np.random.permutation(total_size)
     X_train, y_train = data[indices][:train_size], labels[indices][:train_size]
-    X_test, y_test = ...
+    X_test, y_test = data[indices][train_size:], labels[indices][train_size:]
     print("Train/test shapes:", X_train.shape, X_test.shape)
 
     # TODO: Loop through different values of n_neighbors (1 to 5)
@@ -157,7 +172,7 @@ if __name__ == "__main__":
         "Implemented accuracy is not the same as sci-kit learn one!"
     
     # Check classifier performance
-    assert accuracy_score(y_test, y_pred) > 190. / 290.\
+    assert accuracy_score(y_test, y_pred) > 190. / 290,\
         "Your classifier is worse than the constant !"
 
     # Calculate additional metric and compare with library version
