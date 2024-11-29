@@ -162,13 +162,17 @@ if __name__ == "__main__":
 
     means1, covs1 = [0, -4], [[0.1, 0.0], [0.0, 25]]
     x1, y1 = np.random.multivariate_normal(means1, covs1, 100).T
+    
+    means2, covs2 = [5, -10], [[2, -1], [-1, 2]]
+    x2, y2 = np.random.multivariate_normal(means2, covs2, 120).T
 
     # Convert data to the appropriate format
     data0, labels0 = np.vstack([x0, y0]).T, np.zeros(len(x0))
     data1, labels1 = np.vstack([x1, y1]).T, np.ones(len(x1))
+    data2, labels2 = np.vstack([x2, y2]).T, 2*np.ones(len(x2))
 
-    data = np.vstack([data0, data1])
-    labels = np.hstack([labels0, labels1])
+    data = np.vstack([data0, data1, data2])
+    labels = np.hstack([labels0, labels1, labels2])
     total_size = data.shape[0]
     print("Dataset shape:", data.shape, labels.shape)
 
@@ -211,8 +215,8 @@ if __name__ == "__main__":
 
         # Check classifier performance
         assert (
-            accuracy_score(y_test, y_pred) > 190.0 / 290
-        ), f"This classifier is worse than a constant C={190.0 / 290}."
+            accuracy_score(y_test, y_pred) > 190.0 / 290.0
+        ), f"This classifier is worse than a constant C={190.0 / 290.0}."
 
         # Calculate additional metric and compare with library version
         print(f"Additional metric: {f1_macro:.4f} [custom]")
