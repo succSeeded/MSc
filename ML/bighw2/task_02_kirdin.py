@@ -37,6 +37,8 @@ class KNN:
 
         class_labels = np.unique(self.y_train)
 
+        # repeat train and test for them to have the same dimensions
+        # this is done in order for them to be subtractable from each other
         test_reshaped = np.repeat(X, self.X_train.shape[0]).reshape(
             [X.shape[0], X.shape[1], self.X_train.shape[0]]
         )
@@ -48,11 +50,13 @@ class KNN:
 
         D = np.linalg.norm((test_reshaped - train_reshaped), axis=1)
 
+        # repeat class labels for each unique class
         train_classes = (
             self.y_train.repeat(X.shape[0])
             .reshape([self.y_train.shape[0], X.shape[0]])
             .T
         )
+        # sort the distaces in ascending order
         sort_ids = np.argsort(D, axis=1)
         d_sorted = np.dstack(
             [
@@ -65,6 +69,7 @@ class KNN:
             X.shape[0] * self.n_neighbors, axis=0
         ).reshape(class_labels.shape[0], X.shape[0] * self.n_neighbors)
 
+        # count instances of every class in self.n_neigbors nearest data points
         class_counts = np.count_nonzero(
             (
                 np.ndarray.flatten(d_sorted[:, : self.n_neighbors, 1])
@@ -77,11 +82,21 @@ class KNN:
             axis=2,
         )
 
+        # from repeated class columns select those correspoing to
+        # the class with most occurances in self.n_neigbors nearest
+        # train data points for each test point
         return np.take_along_axis(
-            classes_stacked[:, : X.shape[0]],
+            classes_stacked[:, :X.shape[0]],
             np.argmax(class_counts, axis=0, keepdims=True),
             axis=0,
         ).flatten()
+
+    def set_neighbors(self, new_neighbors:int=None):
+        '''
+        Sets the `n_neigbors` property value.
+        '''
+        if not new_neighbors is None:
+            self.n_neighbors = new_neighbors
 
 
 def accuracy(labels_true: np.ndarray, labels_pred: np.ndarray) -> float:
@@ -94,8 +109,8 @@ def accuracy(labels_true: np.ndarray, labels_pred: np.ndarray) -> float:
 
 def metric(labels_true: np.ndarray, labels_pred: np.ndarray) -> float:
     """
-    Implements an additional classification metric.
-    You can choose one we have discussed in class or come up with your own.
+    Implements the `f1-macro` metric. Computes the number of correct positive, negative and 
+    incorrect negative predictions and their `f1` for each class and then averages those scores.
     """
     if labels_true.shape != labels_pred.shape:
         raise ValueError(
@@ -126,9 +141,8 @@ def plot_classes(
     axis: plt.Axes, x: np.ndarray, y: np.array, cmap: list = None, title: str = None
 ):
     """
-    Basically draw all the points on 2D plot and color them according to their class.
+    Draw the provided points on 2D plot and color them according to their class.
     """
-    # axis.grid()
     axis.set_xlabel("x")
     axis.set_ylabel("y")
     if cmap is None:
@@ -157,19 +171,20 @@ if __name__ == "__main__":
     np.random.seed(100)
 
     # Create synthetic dataset for training and testing
+    # Here I decided to try multiclass classification
     means0, covs0 = [1, -1], [[7, 3], [3, 7]]
     x0, y0 = np.random.multivariate_normal(means0, covs0, 190).T
 
     means1, covs1 = [0, -4], [[0.1, 0.0], [0.0, 25]]
     x1, y1 = np.random.multivariate_normal(means1, covs1, 100).T
-    
+
     means2, covs2 = [5, -10], [[2, -1], [-1, 2]]
     x2, y2 = np.random.multivariate_normal(means2, covs2, 120).T
 
     # Convert data to the appropriate format
     data0, labels0 = np.vstack([x0, y0]).T, np.zeros(len(x0))
     data1, labels1 = np.vstack([x1, y1]).T, np.ones(len(x1))
-    data2, labels2 = np.vstack([x2, y2]).T, 2*np.ones(len(x2))
+    data2, labels2 = np.vstack([x2, y2]).T, 2 * np.ones(len(x2))
 
     data = np.vstack([data0, data1, data2])
     labels = np.hstack([labels0, labels1, labels2])
@@ -185,9 +200,11 @@ if __name__ == "__main__":
 
     plot_classes(axes[0], X_test, y_test, cmap=cm, title="Ground truth labels")
 
+    # Create KNN classifier instance
     predictor = KNN(n_neighbors=1)
     predictor.fit(X_train, y_train)
     y_pred = predictor.predict(X_test)
+    
     plot_classes(
         axes[1], X_test, y_pred, cmap=cm, title="Predictions with n_neighbors = 1"
     )
@@ -196,9 +213,8 @@ if __name__ == "__main__":
 
     for i in range(1, 6):
 
-        # Create KNN classifier instance
-        predictor = KNN(n_neighbors=i)
-        predictor.fit(X_train, y_train)
+        # change the amount of neighbors we have
+        predictor.set_neighbors(i+1)
         y_pred = predictor.predict(X_test)
 
         print(f"knn with {i} nearest neghbours:")
@@ -215,8 +231,8 @@ if __name__ == "__main__":
 
         # Check classifier performance
         assert (
-            accuracy_score(y_test, y_pred) > 190.0 / 290.0
-        ), f"This classifier is worse than a constant C={190.0 / 290.0}."
+            accuracy_score(y_test, y_pred) > 190.0 / 410.0
+        ), f"This classifier is worse than a constant C={190.0 / 410.0}."
 
         # Calculate additional metric and compare with library version
         print(f"Additional metric: {f1_macro:.4f} [custom]")
@@ -253,6 +269,6 @@ if __name__ == "__main__":
     axes[3].set_title("Metrics as functions of n_neighbors")
 
     for ax in axes:
-        ax.figure.savefig(f"bighw2//{str(ax.get_title())}.png")
+        ax.figure.savefig(f"{str(ax.get_title())}.png")
 
     plt.show()
