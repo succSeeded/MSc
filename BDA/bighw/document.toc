@@ -1,0 +1,10 @@
+\babel@toc {english}{}\relax 
+\contentsline {section}{\MakeUppercase []{Introduction}}{3}{Doc-Start}%
+\contentsline {section}{\numberline {\hbox to 0pt{\hss \hspace {0pt}}1 }{\let \oe \OE \@@text@case@aux {upper}{}{Model evaluation}}}{4}{section*.1}%
+\contentsline {subsection}{\numberline {\hbox to 0pt{\hss \hspace {0pt}}1.1 }Problem statement}{4}{section*.2}%
+\contentsline {subsection}{\numberline {\hbox to 0pt{\hss \hspace {0pt}}1.2 }Model evaluation on the Employee Attrition dataset}{4}{section*.3}%
+\contentsline {subsection}{\numberline {\hbox to 0pt{\hss \hspace {0pt}}1.3 }Model evaluation on the Estonia Disaster Passenger List dataset}{8}{section*.11}%
+\contentsline {section}{\MakeUppercase []{Results}}{9}{figure.caption.13}%
+\contentsline {section}{\MakeUppercase []{Conclusion}}{10}{figure.caption.13}%
+\contentsline {section}{\MakeUppercase []{Appendix A}}{11}{figure.caption.13}%
+\contentsline {section}{{\let \oe \OE \@@text@case@aux {upper}{}{References}}}{13}{section*.14}%

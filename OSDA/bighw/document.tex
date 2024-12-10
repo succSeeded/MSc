@@ -7,10 +7,10 @@
 \usepackage[utf8]{inputenc}
 \usepackage{setspace} 
 \usepackage[a4paper,
-left=30mm,
-right=10mm,
-top=20mm,
-bottom=20mm]{geometry}
+			left=30mm,
+			right=10mm,
+			top=20mm,
+			bottom=20mm]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{cite}
 \usepackage{graphicx} 
@@ -114,12 +114,12 @@ bottom=20mm]{geometry}
 		\label{fig:20concepts-inter}
 	\end{figure}
 	
-	 A coarser numerical feature binarization should be considered in terms of its influence on the quality of predictions. With the increase in quantity of features, new dependencies in numerical data could be found. Table A.3 shows the performance metrics for this case; \figref{fig:4concepts-coarse} and \figref{fig:20concepts-coarse} demonstrate the NN architectures with this type of encoding.
+	 A finer numerical feature binarization should be considered in terms of its influence on the quality of predictions. With the increase in quantity of features, new dependencies in numerical data could be found. Table A.3 shows the performance metrics for this case; \figref{fig:4concepts-coarse} and \figref{fig:20concepts-coarse} demonstrate the NN architectures with this type of encoding.
 	
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=\textwidth]{media/employees/NN_architecture_4concepts.png}
-		\caption{NN architecture produced with the 4 best formal concepts(FCs) with coarser ordinal encoding}
+		\caption{NN architecture produced with the 4 best formal concepts(FCs) with finer ordinal encoding}
 		\label{fig:4concepts-coarse}
 	\end{figure}
 	
@@ -128,7 +128,7 @@ bottom=20mm]{geometry}
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=\textwidth]{media/employees/NN_architecture_20concepts.png}
-		\caption{NN architecture produced with the 20 best formal concepts(FCs) with coarser ordinal encoding}
+		\caption{NN architecture produced with the 20 best formal concepts(FCs) with finer ordinal encoding}
 		\label{fig:20concepts-coarse}
 	\end{figure}
 	
@@ -164,7 +164,7 @@ bottom=20mm]{geometry}
 	
 	\begin{results}
 		
-		Coarser binarization produces better results in terms of model metrics than both the baseline and binarization using interordinal encoding with similar number of nodes, however this comes at the cost of interpretability. Increasing the number of formal concepts used to construct the concept lattice does not improve the model's performance; on the contrary, it seems to correlate with decrease in classification performance. Furthermore, the NN architecture used in this work struggles with overfitting on skewed data as exemplified by the Estonia Disaster dataset.
+		Finer binarization produces better results in terms of model metrics than both the baseline and binarization using interordinal encoding with similar number of nodes, however this comes at the cost of interpretability. Increasing the number of formal concepts used to construct the concept lattice does not improve the model's performance; on the contrary, it seems to correlate with decrease in classification performance. Furthermore, the NN architecture used in this work struggles with overfitting on skewed data as exemplified by the Estonia Disaster dataset.
 		
 	\end{results}
 	
@@ -220,7 +220,7 @@ bottom=20mm]{geometry}
 	\end{center}
 	
 	\begin{center}
-		\noindent \textbf{Table A.3} NN performance on the Employee Attrition dataset with coarser ordinal encoding
+		\noindent \textbf{Table A.3} NN performance on the Employee Attrition dataset with finer ordinal encoding
 		\begin{tblr}{width=.80\linewidth,
 				colspec={|X[3,l]|X[c]|X[c]|}}
 			\hline
