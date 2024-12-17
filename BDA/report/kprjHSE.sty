@@ -6,7 +6,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{kprj}[2018/10/03 -- report style for course and laboratory works, A.N. Kanatnikov]
+\ProvidesPackage{kprjHSE}[2018/10/03 -- report style for course and laboratory works, A.N. Kanatnikov]
 
 
 \def\ifempty#1{\def\@tempa{#1}\ifx\@tempa\@empty}
@@ -115,7 +115,7 @@
 \def\sectionfont{\large\bf}
 \def\subsectionfont{\bf}
 \def\subsubsectionfont{\it}
-\def\captionfont{\fontsize{14pt}{14pt}}
+\def\captionfont{\normalsize}
 \def\captionnofont{\bfseries}
 \def\foliofont{\rm}
 \def\colonfont{\footnotesize\sl}
@@ -147,9 +147,6 @@
 
 \renewcommand{\ge}{\geqslant}
 \renewcommand{\le}{\leqslant}
-
-\addto\captionsrussian{\def\contentsname{Contents}}
-\addto\captionsrussian{\def\refname{References}}
 
 \AtEndOfPackage{\pagestyle{oneside}}
 
@@ -400,11 +397,11 @@
 \newcommand\SecondConsultant[1]{\def\@SecondConsultant{#1}}
 \newcommand\FirstAuthor[1]{\def\@FirstAuthor{#1}}
 \newcommand\SecondAuthor[1]{\def\@SecondAuthor{#1}}
+\newcommand\ThirdAuthor[1]{\def\@ThirdAuthor{#1}}
 \def\variant#1{\def\@variant{#1}}
 \def\@block@variant{\def\variant##1{}\let\@variant\relax}
 \def\Ministry#1{\def\@Ministry{#1}}
 \def\BMSTU#1{\def\@BMSTU{#1}}
-\renewcommand\thesubfigure{}
 \let\oldref=\ref 
 \renewcommand{\ref}[1]{(\oldref{#1})}
 \newcommand{\figref}[1]{fig.~\oldref{#1}}
@@ -433,13 +430,14 @@
 	\ifx\@chair\@empty\else\vskip4mm{\fontsize{14pt}{18pt}\selectfont \textit{\@chair}\par}\fi
 	\vskip10em
 	
-	{\fontsize{16pt}{24pt}\selectfont
-		\bgroup\@titlename@font\@title@name\par
-	\egroup}
-	\ifx\@title\@empty\else\vskip4mm{\fontsize{16pt}{24}\selectfont \textbf{\textit{\MakeUppercase{\@title}}}\par}\fi
+	{\fontsize{17.28pt}{27pt}\selectfont
+        \@titlename@font\@title@name\par
+	}
+	\ifx\@title\@empty\else\vskip4mm{\fontsize{17.28pt}{27pt}\selectfont\textbf{\textit{\MakeUppercase{\@title}}}\par}\fi
 	
+	{\fontsize{14pt}{14pt}\selectfont
 	\@ifundefined{@discipline}{}{\vskip4mm{\rm Subject: \textit{\@discipline}\par}}
-	\@ifundefined{@variant}{}{\vskip4mm{\bfseries Variant \No\@variant\par}}
+	\@ifundefined{@variant}{}{\vskip4mm{\bfseries Variant \No\@variant\par}}}
 	\vskip20mm
 	
 	{\fontsize{12pt}{12pt}\selectfont
@@ -447,12 +445,14 @@
 		\raggedright@
 		\@subscr@noline{Student}{\@FirstAuthor}%
 		\@ifundefined{@SecondAuthor}{}{\vskip5mm\@subscr@noline{Student}{\@SecondAuthor}}%
+		\@ifundefined{@ThirdAuthor}{}{\vskip5mm\@subscr@noline{Student}{\@ThirdAuthor}}%
 		\@ifundefined{@FirstConsultant}{}{\vskip5mm\@subscr@noline{Teaching Assistant}{\@FirstConsultant}}
 		\@ifundefined{@SecondConsultant}{}{\vskip5mm\@subscr@noline{Teaching Assistant}{\@SecondConsultant}}
 		\@ifundefined{@chief}{}{\vskip5mm\@subscr@noline{\@chief@type}{\@chief}}%
 		\vskip40mm}
 	
-	\textit{Moscow, \@workyear}\par
+	{\fontsize{14pt}{14pt}\selectfont
+		\textit{Moscow, \@workyear}\par}
 		
 	\pagebreak
 	\end{spacing}
@@ -461,11 +461,11 @@
 
 \def\@title@shapka#1{%
 	\bgroup
-	\ifpdftex\def\emb@file{#1.pdf}\else\def\emb@file{#1.eps}\fi
+	\def\emb@file{#1.eps}
 	\hrule height0pt\vskip-\headheight\vskip-\headsep
 	\ifempty{#1}\else
 	\advance\leftskip by 40mm\noindent
-	\dfb{\kern-3mm\hbox{\includegraphics[scale=1.1]{\emb@file}}}%
+	\dfb{\kern-5mm\hbox{\includegraphics[scale=1.2]{\emb@file}}}%
 	\fi
 	{\fontsize{14}{14pt}\selectfont\bfseries\@Ministry\par}%
 	\vskip2mm

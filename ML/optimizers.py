@@ -77,6 +77,11 @@ def powell_optimizer(
 
         x_prev = x_k.copy()
 
+        # nullify the changes to the basis we are stepping in every n steps
+        # so that the algorithm is less likely to converge on a local minimum
+        if n_iter % 5 == 0:
+            basis = np.eye(x_0.shape[0], dtype=np.float64)
+
         # first, we make steps to the least possible value in the direction of each vector in the basis
         for i in range(x_k.shape[0]):
             step = golden_section(
