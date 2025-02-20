@@ -1,0 +1,32 @@
+1	«	«	PUNCT	_	_	_	_	_	_
+2	Школа	ШКОЛА	NOUN	_	Animacy=Inan|Case=Nom|Gender=Fem|Number=Sing	_	_	_	_
+3	злословия	ЗЛОСЛОВИЕ	NOUN	_	Animacy=Inan|Case=Gen|Gender=Neut|Number=Sing	_	_	_	_
+4	»	»	PUNCT	_	_	_	_	_	_
+5	учит	УЧИТЬ	VERB	_	Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Tense=Notpast|VerbForm=Fin	_	_	_	_
+6	прикусить	ПРИКУСИТЬ	VERB	_	Aspect=Perf|VerbForm=Inf	_	_	_	_
+7	язык	ЯЗЫК	NOUN	_	Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	_	_	_	_
+
+1	Сохранится	СОХРАНИТЬСЯ	VERB	_	Aspect=Perf|Mood=Ind|Number=Sing|Person=3|Tense=Notpast|VerbForm=Fin	_	_	_	_
+2	ли	ЛИ	PART	_	_	_	_	_	_
+3	градус	ГРАДУС	NOUN	_	Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	_	_	_	_
+4	дискуссии	ДИСКУССИЯ	NOUN	_	Animacy=Inan|Case=Gen|Gender=Fem|Number=Sing	_	_	_	_
+5	в	В	ADP	_	_	_	_	_	_
+6	новом	НОВЫЙ	ADJ	_	Case=Loc|Gender=Masc|Number=Sing	_	_	_	_
+7	сезоне	СЕЗОН	NOUN	_	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	_	_	_	_
+8	?	?	PUNCT	_	_	_	_	_	_
+
+1	Великолепная	ВЕЛИКОЛЕПНЫЙ	ADJ	_	Case=Nom|Gender=Fem|Number=Sing	_	_	_	_
+2	«	«	PUNCT	_	_	_	_	_	_
+3	Школа	ШКОЛА	NOUN	_	Animacy=Inan|Case=Nom|Gender=Fem|Number=Sing	_	_	_	_
+4	злословия	ЗЛОСЛОВИЕ	NOUN	_	Animacy=Inan|Case=Gen|Gender=Neut|Number=Sing	_	_	_	_
+5	»	»	PUNCT	_	_	_	_	_	_
+6	вернулась	ВЕРНУТЬСЯ	VERB	_	Aspect=Perf|Gender=Fem|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin	_	_	_	_
+7	в	В	ADP	_	_	_	_	_	_
+8	эфир	ЭФИР	NOUN	_	Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	_	_	_	_
+9	после	ПОСЛЕ	ADP	_	_	_	_	_	_
+10	летних	ЛЕТНИЙ	ADJ	_	Case=Gen|Number=Plur	_	_	_	_
+11	каникул	КАНИКУЛЫ	NOUN	_	Animacy=Inan|Case=Gen|Number=Ptan	_	_	_	_
+12	в	В	ADP	_	_	_	_	_	_
+13	новом	НОВЫЙ	ADJ	_	Case=Loc|Gender=Masc|Number=Sing	_	_	_	_
+14	формате	ФОРМАТ	NOUN	_	Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	_	_	_	_
+15	.	.	PUNCT	_	_	_	_	_	_
