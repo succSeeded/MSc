@@ -2,7 +2,10 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from pymorphy2 import MorphAnalyzer
 
 
-def get_sents(infile):
+def get_sents(infile: str):
+    """
+    Get word forms from a corpus at `infile`.
+    """
     with open(infile, "r", encoding="utf8") as fin:
         answer, curr_sent = [], []
         for line in fin:
@@ -38,6 +41,9 @@ def get_sents(infile):
 
 
 def get_cats_to_measure(pos):
+    """
+    In the corpus used in this task there are several POS that are intended to be used, which are speciefied below. Note that several POS are merged into one (e.g. participles and adjectives) in the corpus we used.
+    """
     if pos == "NOUN":
         return ["Animacy", "Gender", "Number", "Case"]
     elif pos == "ADJ":
@@ -56,48 +62,62 @@ def get_cats_to_measure(pos):
         return []
 
 
+# Due to the issues stemming from the way pymorphy2 tags work, we have to introduce
+# the following dictionaries so that tag comparison works correctly.
 POS_ALIASES = {
-    "ADJ": ["ADJF", 'ADJS', "COMP", "PRTF", "PRTS"],
+    "ADJ": ["ADJF", "ADJS", "COMP", "PRTF", "PRTS"],
     "ADV": ["ADVB"],
-    "VERB": ["VERB", "INFN", "GRND"],
+    "NOUN": ["NOUN"],
+    "VERB": ["INFN", "GRND"],
+    "DET": ["NPRO"],
     "PRON": ["NPRO"],
     "NUM": ["NUMR"],
+    "PROPN": ["NOUN"],
 }
+
 
 VALUE_ALIASES = {
-    "Inf": ["INFN"],
+    "short": ["ADJS", "PRTS"],
+    "cmp": ["COMP"],
+    "sup": ["ADJF"],
+    "pos": ["ADVB"],
+    "anim": ["anim"],
+    "inan": ["inan"],
+    "perf": ["perf"],
+    "imp": ["impf"],
+    "nom": ["nomn"],
+    "gen": ["gent"],
+    "dat": ["datv"],
+    "acc": ["accs"],
+    "loc": ["loct"],
+    "ind": ["indc"],
+    "ins": ["ablt"],
+    "fem": ["femn"],
+    "masc": ["masc"],
+    "neut": ["neut"],
+    "sing": ["sing"],
+    "plur": ["plur"],
     "Brev": ["Short", "Brev"],
     "Short": ["Short", "Brev"],
-    "Notpast": ["Pres", "Fut"],
-    "NumForm": ["Form"],
-    "loct": ["loc"],
-    "gent": ["gen"],
-    "accs": ["acc"],
-    "femn": ["fem"],
-    "indc": ["ind"],
-    "3per": ["3"],
+    "past": ["past"],
+    "notpast": ["pres", "futr"],
+    "inf": ["INFN"],
+    "1": ["1per"],
+    "2": ["2per"],
+    "3": ["3per"],
 }
 
 
-def are_equal_tags(pos, first, second):
+def count_matching_tags(pos: str, first: dict, second: MorphAnalyzer.TagClass) -> int:
+    """
+    Count the number of matching tags
+    """
+    ans = 0
     cats_to_measure = get_cats_to_measure(pos)
     for cat, value in first.items():
         if cat in cats_to_measure:
-            second_value = second.get(cat)
-            if not (
-                second_value == value or second_value in VALUE_ALIASES.get(value, [])
-            ):
-                return False
-    return True
-
-def get_tags_from_string(tags_string):
-    tags = []
-    POS = tags_string[:4]
-    for pos_key, pos_aliases in POS_ALIASES.items():
-        if POS in pos_aliases:
-            tags.append(pos_key)
-            break
-    
+            ans += set(VALUE_ALIASES.get(value.lower(), [])) in second
+    return ans
 
 
 if __name__ == "__main__":
@@ -111,9 +131,45 @@ if __name__ == "__main__":
     SENTS = get_sents(args["textpath"])
     MorphoAnalyzer = MorphAnalyzer()
 
+    corr_sents = 0
+    corr_words = 0
+    corr_words_prev = 0
+    total_words = 0
+    total_words_prev = 0
+    corr_tags = 0
+    total_tags = 0
+
     for SENT in SENTS:
+
+        corr_words_prev = corr_words
+        total_words_prev = total_words
+
         for WORD in SENT:
-            base_form = WORD[0]
-            likeliest_morphology = MorphoAnalyzer.parse(base_form)[0]
-            
-            WORD_PARSED = [likeliest_morphology["word"], likeliest_morphology["normal_form"]]
+
+            # We do not consider punctiation, particles, conjugates etc.
+            if get_cats_to_measure(WORD[1]):
+
+                pymorphy_tags = MorphoAnalyzer.parse(WORD[0])[0].tag
+
+                if not (WORD[1] == "NUM" and WORD[2].get("Form", False)) and (
+                    str(pymorphy_tags.POS) == WORD[1]
+                    or str(pymorphy_tags.POS) in POS_ALIASES.get(WORD[1])
+                ):
+
+                    eq_tags = count_matching_tags(WORD[1], WORD[2], pymorphy_tags)
+                    all_tags = len(WORD[2])
+
+                    corr_tags += eq_tags
+                    total_tags += all_tags
+
+                    corr_words += all_tags == eq_tags
+                    total_words += 1
+
+        if corr_words - corr_words_prev == total_words - total_words_prev:
+            corr_sents += 1
+
+    print(f"Accuracy(correct sents / all sents): {corr_sents / len(SENTS) * 100:0.2f}%")
+    print(
+        f"Accuracy(correct words / all words): {corr_words / total_words * 100:0.2f}%"
+    )
+    print(f"Accuracy(correct tags / all tags): {corr_tags / total_tags * 100:0.2f}%")
