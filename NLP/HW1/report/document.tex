@@ -1,0 +1,93 @@
+% !TeX spellcheck = ru_RU-Russian
+% !TeX encoding = UTF-8 
+
+\documentclass[14pt,a4paper]{extarticle}
+
+\usepackage[russian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{setspace} 
+\usepackage[a4paper,
+			left=30mm,
+			right=10mm,
+			top=20mm,
+			bottom=20mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm, bm}
+\usepackage{cite}
+\usepackage{graphicx} 
+\usepackage{subfigure,subcaption}
+\usepackage{kprjHSE} 
+\usepackage{tikz}
+\usepackage{xcolor,tabularray}
+\usepackage{wrapfig}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=black,
+	citecolor=black,
+	filecolor=black,      
+	urlcolor=blue,
+}
+
+\usetikzlibrary{positioning}
+
+\renewcommand{\labelenumii}{\arabic{enumi}.\arabic{enumii}}
+
+\lstset{
+	frame=single,
+	basicstyle=\ttfamily,
+	breaklines=true,
+	tabsize=4
+}
+
+\LabWork
+\LabWorkNo{1}
+\title{Сегментация и Морфологический анализ текста, Статистика}
+\setcounter{MaxMatrixCols}{20}
+
+\FirstAuthor{М.Д.~Кирдин}
+\FirstConsultant{Е.И.~Большакова}
+\discipline{Компьютерная лингвистика и анализ текстов}
+\faculty{Факультет Компьютерных Наук}
+\chair{Школа Анализа Данных и Искусственного Интеллекта}
+\workyear{2025}
+
+\onehalfspacing
+
+\begin{document}
+	\maketitle
+	
+	\tableofcontents
+	
+	\begin{introduction}
+		
+		В данной работе была поставлена цель провести исследование качества разрешения морфологической омонимии одного из морфоанализаторов для русского языка, подключив его к своей программе. Был выбран \textit{pymorphy2} вследствие легкости его использования.
+		
+		Для оценки были использованы материалы соревнования по морфологической разметке \textit{\href{https://github.com/dialogue-evaluation/morphoRuEval-2017}{MorphoRuEval --- 2017}}, а именно -- тексты в разметке \textit{OpenCorpora}. Они состоят из объединения материалов \textit{Live Journal from General Internet-Corpus of Russian, 30 million words}, \textit{Librusec, 300 million words} и \textit{Social networks, 50 million words}. В этой работе на стояла цель выяснить связь качества морфологического анализа текста в зависимости от тематики, поэтому тексты были объединены в один файл.
+	\end{introduction}
+	
+	\section{Ход работы}
+	
+		Была поставлена задача создания программы, которая сравнивает граммемы из размеченного текста с граммемами предложенными морфоанализатором. Для этого была реализована программа на языке \textit{Python}, доступная в приложении А.
+		
+		Разметка текстовых данных не совпадала с разметкой, предлагаемой морфоанализатором. По этой причине было необходим перевод морфологических тегов. В данном случае большая часть тегов отличилась лишь названием, поэтому было решено использовать словари, связывающие теги из корпуса с тегами из морфоанализатора ($POS\textunderscore ALIASES$ и $VALUE\textunderscore ALIASES$). Стоит заметить, что в разметке текста, в отличие от предлагаемой морфоанализатором, не различались прилагательные и причастные, форма (краткая/полная и компаратив/суперлатив) была тегом самого прилагательного (в морфоанализаторе краткие и полные прилагательные считались различными частями речи), не различались герундий и инфинитив глаголов, а также настоящее и будущее время были объединены в один тег.
+		
+		В данной работе были выбраны следующие метрики качества разрешения морфологической омонимии: \textbf{точность по меткам}, \textbf{точность по словам} и \textbf{точность по предложениям}. При этом рассматривались только только следующие части речи: имя существительное, имя прилагательное, наречие, числительное, местоимение. Для точности по меткам было посчитано отношение количества совпадающих меток и общего количества меток, по словам --- отношение количества слов с полностью совпадающими метками и общего числа рассмотренных слов, для предложений --- отношение количества предложений в которых полностью совпали метки каждого рассмотренного слова к общему числу предложений. В ходе работы морфоанализатор предлагает несколько вариантов разрешения омонимии с соответствующими им вероятностями, поэтому было принято решение рассматривать исключительно наиболее вероятные из них. 
+		\newpage
+		В результате работы программы были получены следующие значения:
+		\begin{itemize}
+			\item точность по меткам --- $89,36\%$;
+			\item точность по словам --- $73,91\%$;
+			\item точность по предложениям --- $30,79\%$.
+		\end{itemize}
+		
+	\begin{results}
+		Согласно полученным результатам, морфоанализатор \textit{pymorphy2} ставит отдельные теги с высокой точностью.
+	\end{results}
+
+	\section*{Приложение А}
+	\addcontentsline{toc}{section}{\MakeUppercase{Приложение А}}
+	
+	\centering\textbf{Листинг А.1.} Программа run.py
+	\lstinputlisting[language=Python, showstringspaces=false]{code/run.py}
+
+\end{document}
