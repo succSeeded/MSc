@@ -191,4 +191,6 @@ if __name__ == "__main__":
         ):
             df_corr.at[0, "sentences"] += 1
 
+    print(df_corr)
+    print(df_total)
     print(df_corr.div(df_total))

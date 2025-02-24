@@ -1,5 +1,7 @@
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from pymorphy2 import MorphAnalyzer
+from pandas import DataFrame
+from numpy import zeros
 
 
 def get_sents(infile: str):
@@ -131,18 +133,32 @@ if __name__ == "__main__":
     SENTS = get_sents(args["textpath"])
     MorphoAnalyzer = MorphAnalyzer()
 
-    corr_sents = 0
-    corr_words = 0
+    df_total = DataFrame(
+        data=zeros((1, 10)),
+        columns=[
+            "sentences",
+            "words",
+            "tags",
+            "NOUN",
+            "ADJ",
+            "PRON",
+            "DET",
+            "VERB",
+            "ADV",
+            "NUM",
+        ],
+    )
+    df_corr = df_total.copy()
+
     corr_words_prev = 0
-    total_words = 0
     total_words_prev = 0
-    corr_tags = 0
-    total_tags = 0
+
+    df_total.at[0, "sentences"] = len(SENTS)
 
     for SENT in SENTS:
 
-        corr_words_prev = corr_words
-        total_words_prev = total_words
+        corr_words_prev = df_corr.at[0, "words"]
+        total_words_prev = df_total.at[0, "words"]
 
         for WORD in SENT:
 
@@ -159,17 +175,22 @@ if __name__ == "__main__":
                     eq_tags = count_matching_tags(WORD[1], WORD[2], pymorphy_tags)
                     all_tags = len(WORD[2])
 
-                    corr_tags += eq_tags
-                    total_tags += all_tags
+                    df_corr.at[0, "tags"] += eq_tags
+                    df_total.at[0, "tags"] += all_tags
 
-                    corr_words += all_tags == eq_tags
-                    total_words += 1
+                    if all_tags == eq_tags:
+                        df_corr.at[0, "words"] += 1
+                        df_corr.at[0, WORD[1]] += 1
 
-        if corr_words - corr_words_prev == total_words - total_words_prev:
-            corr_sents += 1
+                    df_total.at[0, WORD[1]] += 1
+                    df_total.at[0, "words"] += 1
 
-    print(f"Accuracy(correct sents / all sents): {corr_sents / len(SENTS) * 100:0.2f}%")
-    print(
-        f"Accuracy(correct words / all words): {corr_words / total_words * 100:0.2f}%"
-    )
-    print(f"Accuracy(correct tags / all tags): {corr_tags / total_tags * 100:0.2f}%")
+        if (
+            df_corr.at[0, "words"] - corr_words_prev
+            == df_total.at[0, "words"] - total_words_prev
+        ):
+            df_corr.at[0, "sentences"] += 1
+
+    print(df_corr)
+    print(df_total)
+    print(df_corr.div(df_total))

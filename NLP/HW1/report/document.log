@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.12.3)  23 FEB 2025 23:56
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.12.3)  24 FEB 2025 17:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1203,6 +1203,14 @@ LaTeX Warning: Command \textunderscore invalid in math mode on input line 72.
 
 LaTeX Warning: Command \textunderscore invalid in math mode on input line 72.
 
+> Step: init table outer spec.
+> Step: parse table options.
+> Step: split table.
+> Step: init table inner spec.
+> Step: parse table inner spec.
+> Step: execute table commands.
+> Step: calculate cell and line sizes.
+> Step: build the whole table.
 
 
 
@@ -1213,19 +1221,24 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [5{E:/Apps/MiKTeX/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
+ [5]
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [6]
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [7]
 (E:\Apps\MiKTeX\tex/latex/listings\lstlang1.sty
 File: lstlang1.sty 2024/09/23 1.10c listings language file
 )
 Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
-nput line 91.
+nput line 122.
 LaTeX Font Info:    Trying to load font information for T2A+cmtt on input line 
-91.
+122.
 
 (E:\Apps\MiKTeX\tex/latex/cyrillic\t2acmtt.fd
 File: t2acmtt.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
@@ -1233,11 +1246,6 @@ File: t2acmtt.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
 LaTeX Font Info:    Font shape `T2A/cmtt/bx/n' in size <14.4> not available
 (Font)              Font shape `T2A/cmtt/m/n' tried instead on input line 1.
 
-
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [7]
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -1257,12 +1265,22 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [11])
+ [11]
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [12]
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [13])
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [14]
 (document.aux)
  ***********
 LaTeX2e <2024-11-01>
@@ -1273,27 +1291,32 @@ L3 programming layer <2024-11-02>
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.28pt have occurred.
 
-Package rerunfilecheck Info: File `document.out' has not changed.
-(rerunfilecheck)             Checksum: 8DB50B535BFA19F5C5CF54EE714DEE6C;487.
+
+Package rerunfilecheck Warning: File `document.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `document.out':
+(rerunfilecheck)             Before: 8DB50B535BFA19F5C5CF54EE714DEE6C;487
+(rerunfilecheck)             After:  049EBF45BDBE5081BDF67B387F26A27F;611.
  ) 
 Here is how much of TeX's memory you used:
- 29253 strings out of 473682
- 530343 string characters out of 5733406
- 1326519 words of memory out of 5000000
- 51663 multiletter control sequences out of 15000+600000
- 571007 words of font info for 67 fonts, out of 8000000 for 9000
+ 29523 strings out of 473682
+ 539261 string characters out of 5733406
+ 1324087 words of memory out of 5000000
+ 51912 multiletter control sequences out of 15000+600000
+ 572280 words of font info for 69 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 84i,8n,93p,1659b,2264s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,8n,99p,1725b,2264s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <E:/Apps/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><E:/Apps/MiKTeX/fon
-ts/type1/public/amsfonts/cm/cmr12.pfb><E:/Apps/MiKTeX/fonts/type1/public/cm-sup
-er/sfbi1728.pfb><E:/Apps/MiKTeX/fonts/type1/public/cm-super/sfbx1440.pfb><E:/Ap
-ps/MiKTeX/fonts/type1/public/cm-super/sfbx1728.pfb><E:/Apps/MiKTeX/fonts/type1/
-public/cm-super/sfit1440.pfb><E:/Apps/MiKTeX/fonts/type1/public/cm-super/sfrm14
-40.pfb><E:/Apps/MiKTeX/fonts/type1/public/cm-super/sfti1440.pfb><E:/Apps/MiKTeX
-/fonts/type1/public/cm-super/sftt1440.pfb>
-Output written on document.pdf (12 pages, 365895 bytes).
+ts/type1/public/cm-super/sfbi1728.pfb><E:/Apps/MiKTeX/fonts/type1/public/cm-sup
+er/sfbx1440.pfb><E:/Apps/MiKTeX/fonts/type1/public/cm-super/sfbx1728.pfb><E:/Ap
+ps/MiKTeX/fonts/type1/public/cm-super/sfit1440.pfb><E:/Apps/MiKTeX/fonts/type1/
+public/cm-super/sfrm1440.pfb><E:/Apps/MiKTeX/fonts/type1/public/cm-super/sfti14
+40.pfb><E:/Apps/MiKTeX/fonts/type1/public/cm-super/sftt1440.pfb>
+Output written on document.pdf (14 pages, 361848 bytes).
 PDF statistics:
- 353 PDF objects out of 1000 (max. 8388607)
- 190 named destinations out of 1000 (max. 500000)
+ 378 PDF objects out of 1000 (max. 8388607)
+ 213 named destinations out of 1000 (max. 500000)
  70 words of extra memory for PDF output out of 10000 (max. 10000000)
 
