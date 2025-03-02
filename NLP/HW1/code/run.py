@@ -1,3 +1,6 @@
+"""
+Use python run.py -h in order to look up information about arguments.
+"""
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from pymorphy2 import MorphAnalyzer
 from pandas import DataFrame
