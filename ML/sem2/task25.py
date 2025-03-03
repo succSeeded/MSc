@@ -23,7 +23,7 @@ def information_gain(X: np.ndarray, y: np.ndarray, feature_idx: int) -> float:
 def id3_algorithm(X: np.ndarray, y: np.ndarray, features: list) -> dict[str, Any]:
     """Recursively build the ID3 decision tree."""
     classes, counts = np.unique(y, return_counts=True)
-    majority_class = ...
+    majority_class = classes[np.argmax(counts)]
 
     # Base case: all samples same class
     if len(classes) == 1 or not features:
