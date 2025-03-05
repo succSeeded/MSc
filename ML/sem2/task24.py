@@ -9,6 +9,27 @@ import numpy as np
 import pandas as pd
 
 
+def entropy(y: np.ndarray) -> float:
+    """Calculate the entropy of a target array."""
+    _, counts = np.unique(y, return_counts=True)
+    probs = counts / y.shape[0]
+    return -np.sum(probs * np.log(probs + 1e-10))
+
+
+def information_gain(X: np.ndarray, y: np.ndarray, feature_idx: int) -> float:
+    """Calculate the information gain for a given feature."""
+    parent_entropy = entropy(y)
+
+    values, counts = np.unique(X[:, feature_idx], return_counts=True)
+    probs = counts / y.shape[0]
+    entropies = np.array(
+        list(map(lambda x: entropy(y[X[:, feature_idx] == x]), values))
+    )
+    conditional_entropy = np.sum(probs * entropies)
+
+    return parent_entropy - conditional_entropy
+
+
 def select_best_feature(X: np.ndarray, y: np.ndarray, features: list) -> list:
     """Select the feature with the highest information gain."""
     best_idx = np.argmax([information_gain(X, y, i) for i in range(X.shape[1])])
@@ -46,27 +67,6 @@ def id3_algorithm(X: np.ndarray, y: np.ndarray, features: list) -> Dict[str, Any
     return tree
 
 
-def entropy(y: np.ndarray) -> float:
-    """Calculate the entropy of a target array."""
-    _, counts = np.unique(y, return_counts=True)
-    probs = counts / y.shape[0]
-    return -np.sum(probs * np.log(probs + 1e-10))
-
-
-def information_gain(X: np.ndarray, y: np.ndarray, feature_idx: int) -> float:
-    """Calculate the information gain for a given feature."""
-    parent_entropy = entropy(y)
-
-    values, counts = np.unique(X[:, feature_idx], return_counts=True)
-    probs = counts / y.shape[0]
-    entropies = np.array(
-        list(map(lambda x: entropy(y[X[:, feature_idx] == x]), values))
-    )
-    conditional_entropy = np.sum(probs * entropies)
-
-    return parent_entropy - conditional_entropy
-
-
 def visualize_tree(
     tree: Dict[str, Any],
     feature_names: list,
@@ -102,7 +102,7 @@ def visualize_tree(
 
 class DecisionTree:
     """
-    Decision tree classifier, which can be trained, can predict class labels(miraculously) and display itself if used in jupyter.
+    Decision tree classifier, which can be trained, can predict class labels(miraculously) and display itself if used in a frontend environment.
     """
 
     def __init__(self):
@@ -140,7 +140,7 @@ if __name__ == "__main__":
     # x_test = np.array([["rainy", "hot", "high", False],
     #                    ["sunny", "hot", "high", False],
     #                    ["rainy", "cool", "normal", True],
-    #                    ["overcast", "mild", "high", False]], dtype=np.object_)
+    #                    ["overcast", "mild", "high", False]], dtype="object")
     # print(classifier.predict(x_test))
 
     dataset = {
@@ -194,8 +194,10 @@ if __name__ == "__main__":
     classifier = DecisionTree()
     classifier.fit(x_train, y_train, feature_names.copy())
 
+    # Show the tree
     classifier.show_tree()
 
-    x_test = np.array([["Salty", "Hot", "Hard"]], dtype=np.object_)
+    # Check performance on test data
+    x_test = np.array([["Salty", "Hot", "Hard"]], dtype="object")
     prediction = classifier.predict(x_test)
     print(f"Prediction for the new data point: {prediction}")
