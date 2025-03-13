@@ -3,7 +3,9 @@ A blackbox optimizer that uses GP to approximate the function and finds the maxi
 """
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from typing import List
+from matplotlib.axes import Axes
 from matplotlib import colormaps
+from numpy.random import uniform
 from os import curdir
 from os.path import abspath, isfile, join
 from time import sleep
@@ -18,10 +20,14 @@ import matplotlib.pyplot as plt
 
 
 
-def plot_colorful_wireframe(X: np.ndarray, Y: np.ndarray, Z: np.ndarray):
-    fig = plt.figure()
-    ax = fig.add_subplot(projection="3d")
-    
+def pretty_wireframe(X: np.ndarray, Y: np.ndarray, Z: np.ndarray, ax: Axes=None) -> None:
+    """
+    A version of wireframe that supports multicoloured output. Essentially a surface with `alpha` = 0.
+    """
+    if not ax:
+        fig = plt.figure()
+        ax = fig.add_subplot(projection="3d")
+
     # Normalize to [0,1]
     norm = plt.Normalize(Z.min(), Z.max())
     colors = colormaps["jet"](norm(Z))
@@ -59,15 +65,14 @@ class GaussianProcessRegressor:
     """
     def __init__(self, kernel: str="RBF") -> None:
         self._kernel = kernels[kernel]
-        self._n_params = n_params[kernel] + 1
-        self._noise2 = 1e-6
-        
+        self._n_params = n_params[kernel]
+        self._noise2 = 1e-10
         self._kernel_params = [5, 0.07]
 
 
     def neg_log_likelihood(self, theta: Iterable, x: np.ndarray, y: np.ndarray) -> float:
-        noise = theta[0]
-        kernel_params = theta[1:]
+        noise = 1e-5
+        kernel_params = theta
         K = self._kernel(x, x, kernel_params) + noise**2 * np.eye(len(x))
         try:
             L = np.linalg.cholesky(K)
@@ -84,18 +89,17 @@ class GaussianProcessRegressor:
 
     def _optimize_parameters(self, x: np.ndarray, y: np.ndarray) -> None:
 
-        initial_params = [1000.0] * self._n_params
-        initial_params[0] = 1e-5
+        initial_params = [10000.0] * (self._n_params)
         result = minimize(
             self.neg_log_likelihood,
             initial_params,
             args=(x, y),
             bounds=(((1e-6, None), ) * self._n_params),
-            method="L-BFGS-B",
+            method="Nelder-Mead",
         )
         print(result.x)
-        self._noise2 = result.x[0]
-        self._kernel_params = result.x[1:]
+        # self._noise2 = result.x[0]**2
+        self._kernel_params = result.x[:]
 
 
     def fit(self, x: np.ndarray, y: np.ndarray, optmize_parameters:bool=True) -> None:
@@ -129,12 +133,11 @@ def get_grid(x_coords: np.ndarray, y_coords: np.ndarray) -> np.ndarray:
     Get function values on the grid using POST requests.
     """
     post_args = {"secret_key": "WVRjjVBm", "type": "small"}
-    x_len, y_len = x_coords.shape
-    z = np.zeros((x_len, y_len))
+    z = np.zeros_like(x_coords)
 
     with open("fvals.txt", "a", encoding="utf8") as file:
-        for i in range(x_len):
-            for j in range(y_len):
+        for i in range(z.shape[0]):
+            for j in range(z.shape[1]):
                 coords = str(x_coords[i,j]) + " " + str(y_coords[i,j])
                 print(f"Requesting value at {coords}\n")
 
@@ -153,51 +156,94 @@ def get_grid(x_coords: np.ndarray, y_coords: np.ndarray) -> np.ndarray:
     return z
 
 
+def get_points_from_file(fname: str) -> list:
+    """
+    Get a set of points and F(x,y) for those points from a file.
+    """
+    with open(fname, "r", encoding="utf8") as file:
+        content = file.readlines()
+        npoints = len(content[1:])
+        x = np.zeros(npoints)
+        y = np.zeros(npoints)
+        z = np.zeros(npoints)
+        for i in range(len(content[1:])):
+            coords, fval = content[1 + i].rstrip().split("|")
+            x[i], y[i] = map(np.float64, coords.split(" "))
+            z[i] = np.float64(fval)
+    return [x, y, z]
+
+
+def get_randpoints(npoints: int) -> list:
+    """
+    Get function values at `npoints` random points using POST requests.
+    """
+    post_args = {"secret_key": "WVRjjVBm", "type": "large"}
+    x, y = uniform(-1, 1, size=(2, npoints))
+    z = np.zeros(npoints)
+
+    with open("fvals_rand.txt", "a", encoding="utf8") as file:
+        for i in range(npoints):
+            coords = str(x[i]) + " " + str(y[i])
+            print(f"Requesting value at {coords}")
+
+            post_args["x"] = coords
+
+            try:
+                response = post("http://optimize-me.ddns.net:8080/", data=post_args, timeout=2)
+                print("OK!")
+            except ReadTimeout:
+                response = post("http://optimize-me.ddns.net:8080/", data=post_args, timeout=2)
+                print("OK!")
+
+            fval = str(response.content, encoding="utf8")
+            z[i] = np.float64(response.content)
+            file.write(coords + "|" + fval + "\n")
+
+            sleep(2)
+    return [x, y, z]
+
+
 if __name__=="__main__":
-    
+
     parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument(
         "-f", action="store_true", help="Get the value of true function at optimum"
     )
+    parser.add_argument(
+        "--plot_surf", action="store_true", help="Plot wireframe of the interpolant"
+    )
+    parser.add_argument(
+        "--plot_contours", action="store_true", help="Plot contours of the fast function and its interpolant"
+    )
     varss = vars(parser.parse_args())
 
-    if not isfile(abspath(join(curdir,"fvals.txt"))):
-        nx = 11
-        ny = 11
-        x, y = np.meshgrid(np.linspace(-1, 1, nx), np.linspace(-1, 1, ny))
-        z = get_grid(x, y)
+    if not isfile(abspath(join(curdir,"fvals_rand.txt"))):
+        # nx = 4
+        # ny = 4
+        # x, y = np.meshgrid(np.linspace(-1, 1, nx), np.linspace(-1, 1, ny))
+        # z = get_grid(x, y)
+        x, y, z = get_randpoints(20)
     else:
-        with open("fvals.txt", "r", encoding="utf8") as file:
-            content = file.readlines()
-            nx, ny = map(np.int64, content[0].rstrip().split(" "))
-            x = np.zeros(nx*ny)
-            y = np.zeros(nx*ny)
-            z = np.zeros(nx*ny)
-            for i in range(len(content[1:])):
-                coords, fval = content[1 + i].rstrip().split("|")
-                x[i], y[i] = map(np.float64, coords.split(" "))
-                z[i] = np.float64(fval)
+        x, y, z = get_points_from_file("fvals_rand.txt")
 
     gpr = GaussianProcessRegressor()
-    gpr.fit(np.hstack((x.reshape(-1,1), y.reshape(-1,1))), z, optmize_parameters=False)
+    gpr.fit(np.hstack((x.flatten().reshape(-1,1), y.flatten().reshape(-1,1))), z.flatten().reshape(-1,1), optmize_parameters=False)
 
-    x = x.reshape(nx,ny)
-    y = y.reshape(nx,ny)
-    z = z.reshape(nx,ny)
+    def target(X: np.ndarray) -> float:
+        return -gpr.predict(X.reshape(1,-1))[0]
 
-    nx_plot = 51j
-    ny_plot = 51j
-    X, Y = np.mgrid[-1:1:nx_plot, -1:1:ny_plot]
-    positions = np.vstack([X.ravel(), Y.ravel()])
-    Z, _ = gpr.predict(positions.T)
-    Z = Z.reshape(int(nx_plot.imag), int(ny_plot.imag))
+    rpoint = np.array([-0.75, 0.75])
+    optimum = minimize(target,rpoint,bounds=((-1,1),(-1,1)),method="L-BFGS-B")
+    for i in range(19):
+        rpoint = uniform(-1,1, size=2)
+        curr_opt = minimize(target,rpoint,bounds=((-1,1),(-1,1)),method="L-BFGS-B")
+        optimum = curr_opt if target(curr_opt.x) < target(optimum.x) else optimum
 
-    f = lambda X: -gpr.predict(X.reshape(1,-1))[0]
-    optimum = minimize(f,np.array([0,0]),bounds=((-1,1),(-1,1)),method="L-BFGS-B")
     print(f"Found maximum at: {optimum.x}")
+    print(f"F = {target(optimum.x)}")
 
     if varss["f"]:
-        post_args = {"secret_key": "WVRjjVBm", "type": "small"}
+        post_args = {"secret_key": "WVRjjVBm", "type": "large"}
         with open("optima.txt", "a", encoding="utf8") as file:
             coords = str(optimum.x[0]) + " " + str(optimum.x[1])
             print(f"Requesting value at {coords}\n")
@@ -213,14 +259,21 @@ if __name__=="__main__":
             file.write(coords + "|" + fval + "\n")
             print(f"True function value: {fval}")
 
-    fig, axs = plt.subplots(ncols=2)
-    axs[0].contourf(X, Y, Z, cmap="jet")
-    axs[0].set_title("Interpolated fast function")
-    axs[0].plot(optimum.x[0], optimum.x[1], "b*")
-    axs[1].contourf(x, y, z, cmap="jet")
-    axs[1].set_title("Real fast function")
-    axs[1].plot(optimum.x[0], optimum.x[1], "b*")
+    if varss["plot_contours"]:
 
-    # plot_colorful_wireframe(X, Y, Z)
+        nx_plot = 101j
+        ny_plot = 101j
+        X, Y = np.mgrid[-1:1:nx_plot, -1:1:ny_plot]
+        positions = np.vstack([X.ravel(), Y.ravel()])
+        Z, _ = gpr.predict(positions.T)
+        Z = Z.reshape(int(nx_plot.imag), int(ny_plot.imag))
+
+        fig, axs = plt.subplots(ncols=1)
+        axs.contourf(X, Y, Z, cmap="jet")
+        axs.set_title("Interpolated fast function")
+        axs.plot(optimum.x[0], optimum.x[1], "b*")
+
+    if varss["plot_surf"]:
+        pretty_wireframe(X, Y, Z)
 
     plt.show()
