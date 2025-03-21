@@ -72,7 +72,7 @@ class GaussianProcessRegressor:
         self._kernel = kernels[kernel]
         self._n_params = n_params[kernel]
         self._noise2 = 1e-10
-        self._kernel_params = np.array([5, 0.07])
+        self._kernel_params = np.array([10.0, 0.07])
 
     def neg_log_likelihood(
         self, theta: Iterable, x: np.ndarray, y: np.ndarray
@@ -92,26 +92,26 @@ class GaussianProcessRegressor:
         alpha = solve_triangular(L.T, solve_triangular(L, y, lower=True))
         return (
             0.5 * y.T @ alpha
-            + 0.5 * np.log(np.sum(np.diag(L)))
+            + 0.5 * np.sum(np.log(np.diag(L)))
             + 0.5 * len(x) * np.log(2 * np.pi)
         )
 
     def _optimize_parameters(self, x: np.ndarray, y: np.ndarray) -> None:
 
-        # initial_params = np.concantenate((self._kernel_params, [self._noise2]))
+        # initial_params = np.concatenate((self._kernel_params, [self._noise2]))
         initial_params = self._kernel_params
         result = minimize(
             self.neg_log_likelihood,
             initial_params,
             args=(x, y),
-            bounds=(((1e-10, 1000.0),) * self._n_params),
+            bounds=(((5e-2, 20.0),) * self._n_params),
             method="Powell",
         )
         # self._noise2 = result.x[-1]
         # self._kernel_params = result.x[:-1]
 
         self._kernel_params = result.x
-        print(result.x)
+        # print(result.x)
 
     def fit(
         self, x: np.ndarray, y: np.ndarray, optmize_parameters: bool = True
@@ -133,21 +133,24 @@ class GaussianProcessRegressor:
         """
         Make a prediction based on training data
         """
-        k_star = self._kernel(self._x_train, x, self._kernel_params)
-        k_starstar = self._kernel(x, x, self._kernel_params)
-        mu = k_star.T @ self._alpha
-        v = solve_triangular(self._L, k_star, lower=True)
-        cov = k_starstar - v.T @ v
-        return mu, cov
+        mu = np.zeros((x.shape[0],1))
+        std = np.zeros((x.shape[0],1))
+        for i in range(x.shape[0]):
+            k_star = self._kernel(self._x_train, x[i,:].reshape(1,-1), self._kernel_params)
+            k_starstar = self._kernel(x[i, :].reshape(1,-1), x[i, :].reshape(1,-1), self._kernel_params)
+            mu[i, :] = k_star.T @ self._alpha
+            v = solve_triangular(self._L, k_star, lower=True)
+            std[i, :] = np.sqrt(k_starstar - v.T @ v)
+        return mu, std
 
 
-def get_fval(x: float, y: float, func_type:str="small") -> float:
+def get_fval(point: float, func_type:str="small") -> float:
     """
     Get function value at a specific point using POST request.
     """
     post_args = {"secret_key": "WVRjjVBm", "type": func_type}
     with open(f"fvals_{func_type}.txt", "a", encoding="utf8") as file:
-        coords = f"{x} {y}"
+        coords = f"{point[0]} {point[1]}"
         print(f"Requesting value at {coords}\n")
 
         post_args["x"] = coords
@@ -160,7 +163,7 @@ def get_fval(x: float, y: float, func_type:str="small") -> float:
             response = post(
                 "http://optimize-me.ddns.net:8080/", data=post_args, timeout=2.0
             )
-
+        print("OK!")
         fval = str(response.content, encoding="utf8")
         z = np.float64(response.content)
         file.write(coords + "|" + fval + "\n")
@@ -252,13 +255,13 @@ def get_randpoints(npoints: int, func_type:str="small") -> list:
     return [x, y, z]
 
 
-def EI_acquisition(fval: float, mu: float, std: float) -> float:
+def EI_acquisition(fval: np.ndarray, mu: np.ndarray, std: np.ndarray) -> np.ndarray:
     """
     Expected Improvement(EI) acquisition function.
     Parameters:
-        `fval`(float): function value at a certain point,
-        `mu`(float): mean of a surrogate model at a certain point,
-        `fval`(float): standard deviation of a surrogate model at a certain point,
+        `fval`(np.ndarray or float): function value at a certain point,
+        `mu`(np.ndarray or float): mean of a surrogate model at a certain point,
+        `fval`(np.ndarray or float): standard deviation of a surrogate model at a certain point,
     """
     
     standard_normal_cdf = norm.cdf
@@ -270,23 +273,23 @@ if __name__ == "__main__":
 
     parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument(
-        "-f", action="store_true", help="Get the value of true function at optimum"
-    )
-    parser.add_argument(
         "-a", action="store_true", help="Add new points"
-    )
-    parser.add_argument(
-        "--plot_surf", action="store_true", help="Plot wireframe of the interpolant"
     )
     parser.add_argument(
         "--plot_contours",
         action="store_true",
         help="Plot contours of the fast function and its interpolant",
     )
+    parser.add_argument(
+        "--bayes_iter_count",
+        action="store",
+        default=10,
+        help="How many Bayes optimiziation iterations to do",
+    )
     varss = vars(parser.parse_args())
 
     if not isfile(abspath(join(curdir, "fvals_large.txt"))) or varss["a"]:
-        x, y, z = get_randpoints(10)
+        x, y, z = get_randpoints(10, func_type="large")
     else:
         x, y, z = get_points_from_file("fvals_large.txt")
 
@@ -299,77 +302,59 @@ if __name__ == "__main__":
         optmize_parameters=True,
     )
 
-    curr_optimum = np.max(z)
-    curr_optimum_point = points[np.argmax(z),:]
-    print(curr_optimum_point)
+    curr_maximum = np.max(z)
+    curr_maximum_point = points[np.argmax(z),:]
 
     def target(point: np.ndarray, curr_optimum: float):
         mu, std = gpr.predict(point.reshape(1, -1))
-        return EI_acquisition(curr_optimum, mu, std)
+        return -EI_acquisition(curr_optimum, mu, std)
 
-    n_bayes_iters = 10
-    for i in range(n_bayes_iters):
-        rpoint = uniform(-1, 1, size=2)
-        optimum = minimize(target, rpoint, args=(curr_optimum), bounds=((-1, 1), (-1, 1)), method="L-BFGS-B")
-        curr_optimum_point = optimum.x
-        ei_optimum = optimum.fun
-        print(curr_optimum_point)
-        print(ei_optimum)
-
-    # def target(X: np.ndarray) -> float:
-    #     return -gpr.predict(X.reshape(1, -1))[0]
-
-    # rpoint = np.array([-0.20, -0.25])
-    # optimum = minimize(target, rpoint, bounds=((-1, 1), (-1, 1)), method="L-BFGS-B")
-    # for i in range(4):
-    #     rpoint = uniform(-1, 1, size=2)
-    #     curr_opt = minimize(
-    #         target, rpoint, bounds=((-1, 1), (-1, 1)), method="L-BFGS-B"
-    #     )
-    #     optimum = curr_opt if target(curr_opt.x) < target(optimum.x) else optimum
-
-    # print(f"Found maximum at: {optimum.x}")
-    # print(f"Mean F = {-target(optimum.x)}")
-    # print(f"std F = {gpr.predict(optimum.x.reshape(1,-1))[1]}")
-
-    if varss["f"]:
-        post_args = {"secret_key": "WVRjjVBm", "type": "large"}
-        with open("fvals_true.txt", "a", encoding="utf8") as file:
-            coords = str(optimum.x[0]) + " " + str(optimum.x[1])
-            print(f"Requesting value at {coords}\n")
-
-            post_args["x"] = coords
-
-            try:
-                response = post(
-                    "http://optimize-me.ddns.net:8080/", data=post_args, timeout=2
-                )
-            except ReadTimeout:
-                response = post(
-                    "http://optimize-me.ddns.net:8080/", data=post_args, timeout=2
-                )
-
-            fval = str(response.content, encoding="utf8")
-            file.write(coords + "|" + fval + "\n")
-            print(f"True function value: {float(response.content):0.6f}")
-
-    if varss["plot_contours"] or varss["plot_surf"]:
-        nx_plot = 101j
-        ny_plot = 101j
-        X, Y = np.mgrid[-1:1:nx_plot, -1:1:ny_plot]
-        positions = np.vstack([X.ravel(), Y.ravel()])
-        Z, _ = gpr.predict(positions.T)
-        Z = Z.reshape(int(nx_plot.imag), int(ny_plot.imag))
+    for i in range(int(varss["bayes_iter_count"])):
+        ei_optimum = 0.0
+        for j in range(100):
+            rpoint = uniform(-1, 1, size=2)
+            optimum = minimize(target, rpoint, args=(curr_maximum), bounds=((-1, 1), (-1, 1)), method="L-BFGS-B")
+            if (ei_optimum < -optimum.fun):
+                new_point = optimum.x
+                ei_optimum = -optimum.fun
+        print(f"EI is optimum at: {new_point} \n it's value: {ei_optimum}")
+        points = np.concatenate((points, new_point.reshape(1, -1)), axis=0)
+        new_fval = get_fval(new_point, func_type="large")
+        if (curr_maximum < new_fval):
+            curr_maximum = new_fval
+            curr_maximum_point = new_point
+            print(f"New maximum {curr_maximum:0.6f} at:\n    {curr_maximum}")
+        z = np.concatenate((z, [new_fval]))
+        gpr.fit(
+           points,
+           z.flatten().reshape(-1, 1),
+           optmize_parameters=True,
+        )
 
         if varss["plot_contours"]:
+            nx_plot = 101j
+            ny_plot = 101j
+            X, Y = np.mgrid[-1:1:nx_plot, -1:1:ny_plot]
+            positions = np.vstack([X.ravel(), Y.ravel()])
+            mus, stds = gpr.predict(positions.T)
+            mus = mus.reshape(int(nx_plot.imag), int(ny_plot.imag))
+            stds = stds.reshape(int(nx_plot.imag), int(ny_plot.imag))
+            eis = EI_acquisition(curr_maximum, mus, stds)
+            eis = eis.reshape(int(nx_plot.imag), int(ny_plot.imag))
+            Z = [mus, stds, eis]
+            keys = ["GP mean", "GP standard deviation", "EI acquisition"]
+            # print(Z)
 
-            fig, axs = plt.subplots(ncols=1)
-            contours = axs.contourf(X, Y, Z, cmap="jet")
-            axs.set_title("Interpolated fast function")
-            # axs.plot(optimum.x[0], optimum.x[1], "b*")
-            fig.colorbar(ScalarMappable(norm=Normalize(np.min(Z), np.max(Z)), cmap="jet"), ax=axs, orientation="vertical")
+            fig, axs = plt.subplots(ncols=3, figsize=(15,5))
+            for j in range(3):
+                axs[j].contourf(X, Y, Z[j], cmap="jet")
+                for k in range(points.shape[0]): 
+                    axs[j].plot(points[k, 0], points[k,1], marker="o", mfc="violet", ms=8.0, mew=0.7, mec="black")
+                axs[j].set_title(keys[j])
+                axs[j].plot(curr_maximum_point[0], curr_maximum_point[1], marker="*", mfc="yellow", ms=20.0, mew=0.0, mec="black")
+                axs[j].plot(new_point[0], new_point[1], marker="v", mfc="aqua", ms=15.0, mew=0.7, mec="black")
+                fig.colorbar(ScalarMappable(norm=Normalize(np.min(Z[j]), np.max(Z[j])), cmap="jet"), ax=axs[j], orientation="vertical", label=f"{keys[j]} range")
 
-        if varss["plot_surf"]:
-            pretty_wireframe(X, Y, Z)
 
-        plt.show()
+    plt.show()
+
