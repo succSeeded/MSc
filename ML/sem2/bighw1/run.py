@@ -104,7 +104,7 @@ class GaussianProcessRegressor:
             self.neg_log_likelihood,
             initial_params,
             args=(x, y),
-            bounds=(((5e-2, 20.0),) * self._n_params),
+            bounds=(((5e-2, 100.0),) * self._n_params),
             method="Powell",
         )
         # self._noise2 = result.x[-1]
@@ -151,7 +151,7 @@ def get_fval(point: float, func_type:str="small") -> float:
     post_args = {"secret_key": "WVRjjVBm", "type": func_type}
     with open(f"fvals_{func_type}.txt", "a", encoding="utf8") as file:
         coords = f"{point[0]} {point[1]}"
-        print(f"Requesting value at {coords}\n")
+        print(f"Requesting value at {coords}")
 
         post_args["x"] = coords
 
@@ -289,7 +289,7 @@ if __name__ == "__main__":
     varss = vars(parser.parse_args())
 
     if not isfile(abspath(join(curdir, "fvals_large.txt"))) or varss["a"]:
-        x, y, z = get_randpoints(10, func_type="large")
+        x, y, z = get_randpoints(8, func_type="large")
     else:
         x, y, z = get_points_from_file("fvals_large.txt")
 
@@ -310,26 +310,6 @@ if __name__ == "__main__":
         return -EI_acquisition(curr_optimum, mu, std)
 
     for i in range(int(varss["bayes_iter_count"])):
-        ei_optimum = 0.0
-        for j in range(100):
-            rpoint = uniform(-1, 1, size=2)
-            optimum = minimize(target, rpoint, args=(curr_maximum), bounds=((-1, 1), (-1, 1)), method="L-BFGS-B")
-            if (ei_optimum < -optimum.fun):
-                new_point = optimum.x
-                ei_optimum = -optimum.fun
-        print(f"EI is optimum at: {new_point} \n it's value: {ei_optimum}")
-        points = np.concatenate((points, new_point.reshape(1, -1)), axis=0)
-        new_fval = get_fval(new_point, func_type="large")
-        if (curr_maximum < new_fval):
-            curr_maximum = new_fval
-            curr_maximum_point = new_point
-            print(f"New maximum {curr_maximum:0.6f} at:\n    {curr_maximum}")
-        z = np.concatenate((z, [new_fval]))
-        gpr.fit(
-           points,
-           z.flatten().reshape(-1, 1),
-           optmize_parameters=True,
-        )
 
         if varss["plot_contours"]:
             nx_plot = 101j
@@ -352,8 +332,32 @@ if __name__ == "__main__":
                     axs[j].plot(points[k, 0], points[k,1], marker="o", mfc="violet", ms=8.0, mew=0.7, mec="black")
                 axs[j].set_title(keys[j])
                 axs[j].plot(curr_maximum_point[0], curr_maximum_point[1], marker="*", mfc="yellow", ms=20.0, mew=0.0, mec="black")
-                axs[j].plot(new_point[0], new_point[1], marker="v", mfc="aqua", ms=15.0, mew=0.7, mec="black")
                 fig.colorbar(ScalarMappable(norm=Normalize(np.min(Z[j]), np.max(Z[j])), cmap="jet"), ax=axs[j], orientation="vertical", label=f"{keys[j]} range")
+
+
+        ei_optimum = 0.0
+        for j in range(100):
+            rpoint = uniform(-1, 1, size=2)
+            optimum = minimize(target, rpoint, args=(curr_maximum), bounds=((-1, 1), (-1, 1)), method="L-BFGS-B")
+            if (ei_optimum < -optimum.fun):
+                new_point = optimum.x
+                ei_optimum = -optimum.fun
+        print(f"EI is optimum at: {new_point} \n it's value: {ei_optimum:0.6f}")
+        points = np.concatenate((points, new_point.reshape(1, -1)), axis=0)
+        new_fval = get_fval(new_point, func_type="large")
+        if (curr_maximum < new_fval):
+            curr_maximum = new_fval
+            curr_maximum_point = new_point
+            print(f"New maximum {curr_maximum:0.6f} at:\n    {curr_maximum_point}")
+        z = np.concatenate((z, [new_fval]))
+        gpr.fit(
+           points,
+           z.flatten().reshape(-1, 1),
+           optmize_parameters=True,
+        )
+        if varss["plot_contours"]:
+            for j in range(3):
+                axs[j].plot(new_point[0], new_point[1], marker="v", mfc="aqua", ms=15.0, mew=0.7, mec="black")
 
 
     plt.show()
