@@ -164,7 +164,7 @@ def get_fval(point: float, func_type:str="small") -> float:
                 "http://optimize-me.ddns.net:8080/", data=post_args, timeout=2.0
             )
         print("OK!")
-        fval = str(response.content, encoding="utf8")
+
         z = np.float64(response.content)
         file.write(coords + "|" + fval + "\n")
 
