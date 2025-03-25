@@ -1,5 +1,5 @@
 """
-A blackbox optimizer that uses GP to approximate the function and finds the maximum of its mean.
+A blackbox bayesian optimizer which uses GP estimations as the posterior.
 """
 
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
@@ -65,7 +65,7 @@ n_params = {"RBF": 2, "Const": 1}
 
 class GaussianProcessRegressor:
     """
-    The name is self-explanatory
+    The name is self-explanatory. The lines that are commented out are for the case when the data has noise (e.g. when using fast function).
     """
 
     def __init__(self, kernel: str = "RBF") -> None:
@@ -146,7 +146,7 @@ class GaussianProcessRegressor:
 
 def get_fval(point: float, func_type:str="small") -> float:
     """
-    Get function value at a specific point using POST request.
+    Request the function value at a specific point.
     """
     post_args = {"secret_key": "WVRjjVBm", "type": func_type}
     with open(f"fvals_{func_type}.txt", "a", encoding="utf8") as file:
@@ -174,7 +174,7 @@ def get_fval(point: float, func_type:str="small") -> float:
 
 def get_grid(x_coords: np.ndarray, y_coords: np.ndarray, func_type:str="small") -> np.ndarray:
     """
-    Get function values on the grid using POST requests.
+    Request the function values on a grid.
     """
     post_args = {"secret_key": "WVRjjVBm", "type": func_type}
     z = np.zeros_like(x_coords)
@@ -223,7 +223,7 @@ def get_points_from_file(fname: str) -> list:
 
 def get_randpoints(npoints: int, func_type:str="small") -> list:
     """
-    Get function values at `npoints` random points using POST requests.
+    Request the function values at `npoints` random points.
     """
     post_args = {"secret_key": "WVRjjVBm", "type": func_type}
     x, y = uniform(-1, 1, size=(2, npoints))
@@ -288,6 +288,7 @@ if __name__ == "__main__":
     )
     varss = vars(parser.parse_args())
 
+    # get data points from a file unless the is no file or the user asks for it 
     if not isfile(abspath(join(curdir, "fvals_large.txt"))) or varss["a"]:
         x, y, z = get_randpoints(8, func_type="large")
     else:
@@ -306,12 +307,16 @@ if __name__ == "__main__":
     curr_maximum_point = points[np.argmax(z),:]
 
     def target(point: np.ndarray, curr_optimum: float):
+        """
+        Target function for the EI aquisition function optimization
+        """
         mu, std = gpr.predict(point.reshape(1, -1))
         return -EI_acquisition(curr_optimum, mu, std)
 
     for i in range(int(varss["bayes_iter_count"])):
 
         if varss["plot_contours"]:
+            # create a meshgrid and evaluate mean, std and acquision of its points
             nx_plot = 101j
             ny_plot = 101j
             X, Y = np.mgrid[-1:1:nx_plot, -1:1:ny_plot]
@@ -335,6 +340,8 @@ if __name__ == "__main__":
                 fig.colorbar(ScalarMappable(norm=Normalize(np.min(Z[j]), np.max(Z[j])), cmap="jet"), ax=axs[j], orientation="vertical", label=f"{keys[j]} range")
 
 
+        # Search for the point with the largest aquision function value.
+        # Do multiple restarts from random points to increase the effectiveness.
         ei_optimum = 0.0
         for j in range(100):
             rpoint = uniform(-1, 1, size=2)
@@ -342,6 +349,8 @@ if __name__ == "__main__":
             if (ei_optimum < -optimum.fun):
                 new_point = optimum.x
                 ei_optimum = -optimum.fun
+
+        # The newfound point is added to the dataset and the distribution is reevluated
         print(f"EI is optimum at: {new_point} \n it's value: {ei_optimum:0.6f}")
         points = np.concatenate((points, new_point.reshape(1, -1)), axis=0)
         new_fval = get_fval(new_point, func_type="large")
