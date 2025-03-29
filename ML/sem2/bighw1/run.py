@@ -4,17 +4,17 @@ A blackbox bayesian optimizer which uses GP estimations as the posterior.
 
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from typing import List
-from matplotlib.axes import Axes
-from matplotlib import colormaps
-from matplotlib.cm import ScalarMappable
-from matplotlib.colors import Normalize
-from numpy.random import uniform
 from os import curdir
 from os.path import abspath, isfile, join
 from time import sleep
 from typing import Iterable
 from requests import post
 from requests.exceptions import ReadTimeout
+from matplotlib.axes import Axes
+from matplotlib import colormaps
+from matplotlib.cm import ScalarMappable
+from matplotlib.colors import Normalize
+from numpy.random import uniform
 from scipy.linalg import solve_triangular
 from scipy.spatial.distance import cdist
 from scipy.stats import norm
@@ -133,18 +133,22 @@ class GaussianProcessRegressor:
         """
         Make a prediction based on training data
         """
-        mu = np.zeros((x.shape[0],1))
-        std = np.zeros((x.shape[0],1))
+        mu = np.zeros((x.shape[0], 1))
+        std = np.zeros((x.shape[0], 1))
         for i in range(x.shape[0]):
-            k_star = self._kernel(self._x_train, x[i,:].reshape(1,-1), self._kernel_params)
-            k_starstar = self._kernel(x[i, :].reshape(1,-1), x[i, :].reshape(1,-1), self._kernel_params)
+            k_star = self._kernel(
+                self._x_train, x[i, :].reshape(1, -1), self._kernel_params
+            )
+            k_starstar = self._kernel(
+                x[i, :].reshape(1, -1), x[i, :].reshape(1, -1), self._kernel_params
+            )
             mu[i, :] = k_star.T @ self._alpha
             v = solve_triangular(self._L, k_star, lower=True)
             std[i, :] = np.sqrt(k_starstar - v.T @ v)
         return mu, std
 
 
-def get_fval(point: float, func_type:str="small") -> float:
+def get_fval(point: float, func_type: str = "small") -> float:
     """
     Request the function value at a specific point.
     """
@@ -172,7 +176,9 @@ def get_fval(point: float, func_type:str="small") -> float:
     return z
 
 
-def get_grid(x_coords: np.ndarray, y_coords: np.ndarray, func_type:str="small") -> np.ndarray:
+def get_grid(
+    x_coords: np.ndarray, y_coords: np.ndarray, func_type: str = "small"
+) -> np.ndarray:
     """
     Request the function values on a grid.
     """
@@ -221,7 +227,7 @@ def get_points_from_file(fname: str) -> list:
     return [x, y, z]
 
 
-def get_randpoints(npoints: int, func_type:str="small") -> list:
+def get_randpoints(npoints: int, func_type: str = "small") -> list:
     """
     Request the function values at `npoints` random points.
     """
@@ -263,18 +269,18 @@ def EI_acquisition(fval: np.ndarray, mu: np.ndarray, std: np.ndarray) -> np.ndar
         `mu`(np.ndarray or float): mean of a surrogate model at a certain point,
         `fval`(np.ndarray or float): standard deviation of a surrogate model at a certain point,
     """
-    
+
     standard_normal_cdf = norm.cdf
     standard_normal_pdf = norm.pdf
-    return (mu - fval) * standard_normal_cdf((mu - fval) / std) + std * standard_normal_pdf((mu - fval) / std)
+    return (mu - fval) * standard_normal_cdf(
+        (mu - fval) / std
+    ) + std * standard_normal_pdf((mu - fval) / std)
 
 
 if __name__ == "__main__":
 
     parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument(
-        "-a", action="store_true", help="Add new points"
-    )
+    parser.add_argument("-a", action="store_true", help="Add new points")
     parser.add_argument(
         "--plot_contours",
         action="store_true",
@@ -288,7 +294,7 @@ if __name__ == "__main__":
     )
     varss = vars(parser.parse_args())
 
-    # get data points from a file unless the is no file or the user asks for it 
+    # get data points from a file unless the is no file or the user asks for it
     if not isfile(abspath(join(curdir, "fvals_large.txt"))) or varss["a"]:
         x, y, z = get_randpoints(8, func_type="large")
     else:
@@ -304,7 +310,7 @@ if __name__ == "__main__":
     )
 
     curr_maximum = np.max(z)
-    curr_maximum_point = points[np.argmax(z),:]
+    curr_maximum_point = points[np.argmax(z), :]
 
     def target(point: np.ndarray, curr_optimum: float):
         """
@@ -330,23 +336,51 @@ if __name__ == "__main__":
             keys = ["GP mean", "GP standard deviation", "EI acquisition"]
             # print(Z)
 
-            fig, axs = plt.subplots(ncols=3, figsize=(15,5))
+            fig, axs = plt.subplots(ncols=3, figsize=(15, 5))
             for j in range(3):
                 axs[j].contourf(X, Y, Z[j], cmap="jet")
-                for k in range(points.shape[0]): 
-                    axs[j].plot(points[k, 0], points[k,1], marker="o", mfc="violet", ms=8.0, mew=0.7, mec="black")
+                for k in range(points.shape[0]):
+                    axs[j].plot(
+                        points[k, 0],
+                        points[k, 1],
+                        marker="o",
+                        mfc="violet",
+                        ms=8.0,
+                        mew=0.7,
+                        mec="black",
+                    )
                 axs[j].set_title(keys[j])
-                axs[j].plot(curr_maximum_point[0], curr_maximum_point[1], marker="*", mfc="yellow", ms=20.0, mew=0.0, mec="black")
-                fig.colorbar(ScalarMappable(norm=Normalize(np.min(Z[j]), np.max(Z[j])), cmap="jet"), ax=axs[j], orientation="vertical", label=f"{keys[j]} range")
-
+                axs[j].plot(
+                    curr_maximum_point[0],
+                    curr_maximum_point[1],
+                    marker="*",
+                    mfc="yellow",
+                    ms=20.0,
+                    mew=0.0,
+                    mec="black",
+                )
+                fig.colorbar(
+                    ScalarMappable(
+                        norm=Normalize(np.min(Z[j]), np.max(Z[j])), cmap="jet"
+                    ),
+                    ax=axs[j],
+                    orientation="vertical",
+                    label=f"{keys[j]} range",
+                )
 
         # Search for the point with the largest aquision function value.
         # Do multiple restarts from random points to increase the effectiveness.
         ei_optimum = 0.0
         for j in range(100):
             rpoint = uniform(-1, 1, size=2)
-            optimum = minimize(target, rpoint, args=(curr_maximum), bounds=((-1, 1), (-1, 1)), method="L-BFGS-B")
-            if (ei_optimum < -optimum.fun):
+            optimum = minimize(
+                target,
+                rpoint,
+                args=(curr_maximum),
+                bounds=((-1, 1), (-1, 1)),
+                method="L-BFGS-B",
+            )
+            if ei_optimum < -optimum.fun:
                 new_point = optimum.x
                 ei_optimum = -optimum.fun
 
@@ -354,20 +388,26 @@ if __name__ == "__main__":
         print(f"EI is optimum at: {new_point} \n it's value: {ei_optimum:0.6f}")
         points = np.concatenate((points, new_point.reshape(1, -1)), axis=0)
         new_fval = get_fval(new_point, func_type="large")
-        if (curr_maximum < new_fval):
+        if curr_maximum < new_fval:
             curr_maximum = new_fval
             curr_maximum_point = new_point
             print(f"New maximum {curr_maximum:0.6f} at:\n    {curr_maximum_point}")
         z = np.concatenate((z, [new_fval]))
         gpr.fit(
-           points,
-           z.flatten().reshape(-1, 1),
-           optmize_parameters=True,
+            points,
+            z.flatten().reshape(-1, 1),
+            optmize_parameters=True,
         )
         if varss["plot_contours"]:
             for j in range(3):
-                axs[j].plot(new_point[0], new_point[1], marker="v", mfc="aqua", ms=15.0, mew=0.7, mec="black")
-
+                axs[j].plot(
+                    new_point[0],
+                    new_point[1],
+                    marker="v",
+                    mfc="aqua",
+                    ms=15.0,
+                    mew=0.7,
+                    mec="black",
+                )
 
     plt.show()
-
