@@ -1,0 +1,83 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[russian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{cmap}
+\usepackage{setspace} 
+\usepackage[a4paper,
+			left=30mm,
+			right=10mm,
+			top=20mm,
+			bottom=20mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,bm}
+\usepackage{cite}
+\usepackage{subfigure,subcaption}
+\usepackage{graphicx}
+\usepackage{kprjHSE}
+\usepackage{tabularray}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=black,
+	citecolor=black,
+	filecolor=black,      
+	urlcolor=blue,
+}
+
+\renewcommand{\labelenumii}{\arabic{enumi}.\arabic{enumii}}
+
+\lstset{
+	frame=single,
+	basicstyle=\ttfamily,
+	breaklines=true,
+	tabsize=4
+}
+
+\LabWork
+\title{Реферирование текста на русском языке}
+\setcounter{MaxMatrixCols}{20}
+
+\FirstAuthor{М.Д.~Кирдин}
+\FirstConsultant{Е.И.~Большакова}
+\discipline{Компьютерная лингвистика и анализ текстов}
+\faculty{Факультет Компьютерных Наук}
+\chair{Школа Анализа Данных и Искусственного Интеллекта}
+\workyear{2025}
+
+\onehalfspacing
+
+\begin{document}
+	\maketitle
+
+	\tableofcontents
+	
+	\begin{introduction}
+        Автоматическое реферирование текста является одной из основопологающих задач обработки ествественного языка наряду с машинным переводом и распознаванием сущностей. Способы решения этой задачи делятся на две категории: извлекающие и генерирующие. Целью данной работы было провести сравнение этих подходов к решению задачи аннотирования текста. Извлекающие подходы были представлены алгоритмом \textit{TextRank}, а генерирующие подходы --- моделями с трасформерной архитектурой \textit{FRED-T5-Summarize}, а также \textit{rut5-base} с параметрами отрегулированными для решения задачи реферирования текстов на русском языке.  
+	\end{introduction}
+	
+	\section{Ход работы}
+
+    Для сравнения двузх рахличных подходов было решено использовать специализированный датасет, предолженный Ахметгареевой А и др. \cite{dataset}. Он состоит из 197 тыс. текстов в части предназначенной для обучения и 258 текстов поверенных вручную в части для тестов. 
+
+    \subsection{Реализация извлекающего алгоритма}
+    Алгоритм \textit{TextRank} является модификацией алгоритма \textit{PageRank}, предложенного \textit{Google} в 1998 году. В данной работе используется вариант данного алогоритма для извлечения предложений. Он основан на построении графа при помощи алгоритма \textit{PageRank}, в котором вершинами являются предложения в тексте и извлечении \textit{n} вершин с наибольшим значением внутренней метрики. В рамках данной работы был написан скрипт на языке \textit{Python} с его реализацией. 
+
+    Для построения графа необходима матрица сходств предложений в реферируемом тексте. Она была получена как набор попарных косинусных расстояний между суммами эмбеддингов отдельных токенов. Эмбеддинги и токенизатор были взяты из библотеки \textit{SpaCy}.
+
+    \subsection{Реализация генерирующих алгоритмов}
+
+    Был написан скрипт на языке \textit{Python}, который  
+    \begin{results}
+       
+	\end{results}
+
+	\section*{Заключение}
+	\addcontentsline{toc}{section}{\MakeUppercase{Заключение}}
+
+    \begin{thebibliography}{5}
+        \bibitem{dataset}
+        Akhmetgareeva A., Kuleshov I., Leschuk V., Abramov A., Fenogenova A., Towards Russian Summarization: can architecture solve data limitations problems? // \url{https://sberlabs.com/publications?publication=1600} (2024).
+
+    \end{thebibliography}
+	    
+\end{document}
