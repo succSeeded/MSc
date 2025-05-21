@@ -45,7 +45,7 @@ if __name__=="__main__":
         for articleno, article in enumerate(dataset["text"]):
             clean_text = preprocess_text(article, nlp)
             sim_mtx = get_similarities(clean_text)
-            summary = TextRank(clean_text, sim_mtx)
+            summary = TextRank(clean_text, sim_mtx, n_sents=3)
             print(f'Исходная статья: статья #{articleno+1}')
             print(f'\n{" ".join(summary)}\n\n')
             f.write(f'Исходная статья: статья #{articleno+1}')
