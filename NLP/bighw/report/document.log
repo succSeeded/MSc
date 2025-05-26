@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.9.13)  22 MAY 2025 03:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.9.13)  26 MAY 2025 19:55
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -751,8 +751,8 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 Package hyperref Info: Option `colorlinks' set `true' on input line 25.
  (./document.aux
-LaTeX Font Info:    Trying to load font information for T2A+cmr on input line 8
-.
+LaTeX Font Info:    Trying to load font information for T2A+cmr on input line 1
+9.
 
 (/usr/local/texlive/2023/texmf-dist/tex/latex/cyrillic/t2acmr.fd
 File: t2acmr.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
