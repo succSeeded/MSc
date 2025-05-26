@@ -4,6 +4,7 @@ from datasets import load_dataset, Dataset
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, DataCollatorForSeq2Seq, Trainer, TrainingArguments
 from tqdm.auto import tqdm, trange
 from os import getenv
+from rouge import Rouge
 
 
 MODELS = {
@@ -95,44 +96,30 @@ class RuTextSummarizer:
 if __name__=="__main__":
     ds = load_dataset("RussianNLP/Mixed-Summarization-Dataset", split="test[:40]")
     prefix = "Summarize: "
+    rouge = Rouge()
     for model_name, model_info in MODELS.items():
         assistant_model = AutoModelForSeq2SeqLM.from_pretrained(model_info["assistant"])
         summarizer = RuTextSummarizer(model_info["address"])
         # Сначала смотрим на вывод с русскоязычными префиксами (кратко изложи содержание текста и т.п.)
         print(f"Результаты {model_name} (рус перфиксы, promt lookup):")
-        with open(f"./results/{model_name}_lookup.txt", "w") as f:
-            for articleno, article in tqdm(enumerate(ds["text"])):
-                res = summarizer.summarize(article, assistant_model=assistant_model)
-                # print(f'Исходная статья: статья #{articleno+1}')
-                # print(f'\n{res}\n\n')
-                f.write(f'Исходная статья: статья #{articleno+1}')
-                f.write(f'\n{res}\n\n')
+        res = [summarizer.summarize(article, assistant_model=assistant_model) for articleno, article in tqdm(enumerate(ds["text"]))]
+        print(rouge.get_scores(res, ds["text"], avg=True))
+                
         print(f"Результаты {model_name} (рус перфиксы, beam search):")
-        with open(f"./results/{model_name}_beam.txt", "w") as f:
-            for articleno, article in tqdm(enumerate(ds["text"])):
-                res = summarizer.summarize(article)
-                # print(f'Исходная статья: статья #{articleno+1}')
-                # print(f'\n{res}\n\n')
-                f.write(f'Исходная статья: статья #{articleno+1}')
-                f.write(f'\n{res}\n\n')
+        res = [summarizer.summarize(article) for articleno, article in tqdm(enumerate(ds["text"]))]
+        print(rouge.get_scores(res, ds["text"], avg=True))
 
         # Посмотрим так же на результаты при использовании англоязычного префикса, так как некоторые модели могут вести себя лучше с ними.
         print(f"Результаты {model_name} (англ префиксы, prompt lookup):")
-        with open(f"./results/{model_name}_lookup_en_prefix.txt", "w") as f:
-            for articleno, article in tqdm(enumerate(ds["text"])):
-                article = re.sub('"', "", (re.search('"(.*)"', re.sub("\n", " ", article))[0]))
-                res = summarizer.summarize(article, assistant_model=assistant_model)
-                # print(f'Исходная статья: статья #{articleno+1}')
-                # print(f'\n{res}\n\n')
-                f.write(f'Исходная статья: статья #{articleno+1}')
-                f.write(f'\n{res}\n\n')
+        res = []
+        for articleno, article in tqdm(enumerate(ds["text"])):
+            article = re.sub('"', "", (re.search('"(.*)"', re.sub("\n", " ", article))[0]))
+            res.append(summarizer.summarize(article, assistant_model=assistant_model))
+        print(rouge.get_scores(res, ds["text"], avg=True))  
 
         print(f"Результаты {model_name} (англ префиксы, beam search):")
-        with open(f"./results/{model_name}_beam_en_prefix.txt", "w") as f:
-            for articleno, article in tqdm(enumerate(ds["text"])):
-                article = re.sub('"', "", (re.search('"(.*)"', re.sub("\n", " ", article))[0]))
-                res = summarizer.summarize(article, assistant_model=assistant_model)
-                # print(f'Исходная статья: статья #{articleno+1}')
-                # print(f'\n{res}\n\n')
-                f.write(f'Исходная статья: статья #{articleno+1}')
-                f.write(f'\n{res}\n\n')
+        res = []
+        for articleno, article in tqdm(enumerate(ds["text"])):
+            article = re.sub('"', "", (re.search('"(.*)"', re.sub("\n", " ", article))[0]))
+            res.append(summarizer.summarize(article, assistant_model=assistant_model))
+        print(rouge.get_scores(res, ds["text"], avg=True))

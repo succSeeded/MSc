@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.9.13)  21 MAY 2025 21:59
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.9.13)  22 MAY 2025 03:48
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -751,8 +751,8 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 Package hyperref Info: Option `colorlinks' set `true' on input line 25.
  (./document.aux
-LaTeX Font Info:    Trying to load font information for T2A+cmr on input line 1
-9.
+LaTeX Font Info:    Trying to load font information for T2A+cmr on input line 8
+.
 
 (/usr/local/texlive/2023/texmf-dist/tex/latex/cyrillic/t2acmr.fd
 File: t2acmr.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
@@ -912,7 +912,59 @@ c}]
 > Step: parse table inner spec.
 > Step: execute table commands.
 > Step: calculate cell and line sizes.
+
+Underfull \hbox (badness 10000) in paragraph at lines 128--128
+[]\T2A/cmr/m/it/6 ^^U при-тя-га-тель-ные ре-кре-а-ци-он-ные ре-сур-сы (природно
+-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 128--128
+[]\T2A/cmr/m/it/6 ^^U при-тя-га-тель-ные ре-кре-а-ци-он-ные ре-сур-сы (природно
+-
+ []
+
 > Step: build the whole table.
+
+Underfull \hbox (badness 10000) in paragraph at lines 128--128
+[]\T2A/cmr/m/it/6 ^^U при-тя-га-тель-ные ре-кре-а-ци-он-ные ре-сур-сы (природно
+-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 128--128
+[]\T2A/cmr/m/it/6 ^^U при-тя-га-тель-ные ре-кре-а-ци-он-ные ре-сур-сы (природно
+-
+ []
+
+> Step: init table outer spec.
+> Step: parse table options.
+> Step: split table.
+> Step: init table inner spec.
+> Step: parse table inner spec.
+> Step: execute table commands.
+> Step: calculate cell and line sizes.
+
+Underfull \hbox (badness 1577) in paragraph at lines 143--143
+[]\T2A/cmr/m/it/9 Тануки - тра-ди-ци-он-ные япон-ские звери-оборотни,
+ []
+
+
+Underfull \hbox (badness 1577) in paragraph at lines 143--143
+[]\T2A/cmr/m/it/9 Тануки - тра-ди-ци-он-ные япон-ские звери-оборотни,
+ []
+
+> Step: build the whole table.
+
+Underfull \hbox (badness 1577) in paragraph at lines 143--143
+[]\T2A/cmr/m/it/9 Тануки - тра-ди-ци-он-ные япон-ские звери-оборотни,
+ []
+
+
+Underfull \hbox (badness 1577) in paragraph at lines 143--143
+[]\T2A/cmr/m/it/9 Тануки - тра-ди-ци-он-ные япон-ские звери-оборотни,
+ []
+
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
@@ -925,6 +977,54 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 > Step: execute table commands.
 > Step: calculate cell and line sizes.
 > Step: build the whole table.
+> Step: init table outer spec.
+> Step: parse table options.
+> Step: split table.
+> Step: init table inner spec.
+> Step: parse table inner spec.
+> Step: execute table commands.
+> Step: calculate cell and line sizes.
+
+Underfull \hbox (badness 2277) in paragraph at lines 183--183
+\T2A/cmr/m/it/9 пе-ре-вод Биб-лии, сде-лан-ный епи-
+ []
+
+
+Underfull \hbox (badness 2142) in paragraph at lines 183--183
+\T2A/cmr/m/it/9 им-пе-ри-ей и ас-си-ми-ли-ро-ва-лись с
+ []
+
+
+Underfull \hbox (badness 1270) in paragraph at lines 183--183
+\T2A/cmr/m/it/9 им-ство-ва-ли неко-то-рые сло-ва из
+ []
+
+
+Underfull \hbox (badness 1527) in paragraph at lines 183--183
+\T2A/cmr/m/it/9 ской им-пе-рии (Ви-зан-тии). Сла-
+ []
+
+> Step: build the whole table.
+
+Underfull \hbox (badness 2277) in paragraph at lines 183--183
+\T2A/cmr/m/it/9 пе-ре-вод Биб-лии, сде-лан-ный епи-
+ []
+
+
+Underfull \hbox (badness 2142) in paragraph at lines 183--183
+\T2A/cmr/m/it/9 им-пе-ри-ей и ас-си-ми-ли-ро-ва-лись с
+ []
+
+
+Underfull \hbox (badness 1270) in paragraph at lines 183--183
+\T2A/cmr/m/it/9 им-ство-ва-ли неко-то-рые сло-ва из
+ []
+
+
+Underfull \hbox (badness 1527) in paragraph at lines 183--183
+\T2A/cmr/m/it/9 ской им-пе-рии (Ви-зан-тии). Сла-
+ []
+
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
@@ -932,15 +1032,18 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [7]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [8]
 LaTeX Font Info:    Trying to load font information for T2A+cmtt on input line 
-152.
+198.
 
 (/usr/local/texlive/2023/texmf-dist/tex/latex/cyrillic/t2acmtt.fd
 File: t2acmtt.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
 )
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [8]
+ [9]
 > Step: init table outer spec.
 > Step: parse table options.
 > Step: split table.
@@ -952,7 +1055,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [9]
+ [10]
 (./document.aux)
  ***********
 LaTeX2e <2023-06-01> patch level 1
@@ -967,29 +1070,28 @@ Package rerunfilecheck Info: File `document.out' has not changed.
 (rerunfilecheck)             Checksum: 0E8D9E396D1DA27C266D81A7B520E440;1435.
  ) 
 Here is how much of TeX's memory you used:
- 17685 strings out of 474934
- 293804 string characters out of 5759811
- 1935807 words of memory out of 5000000
- 38962 multiletter control sequences out of 15000+600000
- 576812 words of font info for 83 fonts, out of 8000000 for 9000
+ 18057 strings out of 474934
+ 307098 string characters out of 5759811
+ 1999807 words of memory out of 5000000
+ 39327 multiletter control sequences out of 15000+600000
+ 582927 words of font info for 92 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 80i,8n,100p,1554b,1114s stack positions out of 10000i,1000n,20000p,200000b,200000s
-
-pdfTeX warning (dest): name{params} has been referenced but does not exist, rep
-laced by a fixed one
-
-</usr/local/texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfbi1728.pfb></
-usr/local/texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></us
-r/local/texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/
+ 80i,8n,100p,1579b,1133s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfbi1728.pfb>
+</usr/local/texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></
+usr/local/texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></us
+r/local/texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb></usr/
 local/texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/lo
 cal/texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/loca
-l/texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/
-texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfti1440.pfb></usr/local/te
-xlive/2023/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on document.pdf (9 pages, 314592 bytes).
+l/texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfti0600.pfb></usr/local/
+texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfti0900.pfb></usr/local/te
+xlive/2023/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texl
+ive/2023/texmf-dist/fonts/type1/public/cm-super/sfti1440.pfb></usr/local/texliv
+e/2023/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
+Output written on document.pdf (10 pages, 404981 bytes).
 PDF statistics:
- 150 PDF objects out of 1000 (max. 8388607)
- 119 compressed objects within 2 object streams
- 17 named destinations out of 1000 (max. 500000)
+ 167 PDF objects out of 1000 (max. 8388607)
+ 132 compressed objects within 2 object streams
+ 18 named destinations out of 1000 (max. 500000)
  90 words of extra memory for PDF output out of 10000 (max. 10000000)
 
