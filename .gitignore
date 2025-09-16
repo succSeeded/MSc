@@ -1,3 +1,22 @@
-**/.ipynb_checkpoints
-**/.DS_Store
-**/Brain_EEG.npy
+.ipynb_checkpoints/
+.DS_Store
+
+# Datasets
+data/
+*.npy
+*.conllu
+*.csv
+*.txt
+*.json
+
+# LaTeX stuff
+*.toc
+*.out
+*.log
+*.aux
+
+*.gz
+
+# ML stuff
+YetiRank/
+
